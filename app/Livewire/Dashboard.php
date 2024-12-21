@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\GroupForm;
+use App\Models\Group;
+use App\Models\Invite;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -19,7 +21,15 @@ class Dashboard extends Component
     public function groups()
     {
         /* todo fix & eager load votes hasManyDeep */
-        return auth()->user()->groups()->with('lists.suggestions.votes')->withCount(['members', 'lists'])->get();
+        return Group::query()
+            ->whereHas('invites', function($query) {
+                $query->newQuery()
+                    ->where('status', Invite::ACCEPTED)
+                    ->where('user_id', auth()->id());
+            })
+            ->with('feeds.suggestions.votes')
+            ->withCount(['invites', 'feeds'])
+            ->get();
     }
 
     public function confirm($groupId)

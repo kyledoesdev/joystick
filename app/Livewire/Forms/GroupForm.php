@@ -3,8 +3,9 @@
 namespace App\Livewire\Forms;
 
 use App\Livewire\Traits\TableHelpers;
+use App\Models\Feed;
 use App\Models\Group;
-use App\Models\GroupList;
+use App\Models\Invite;
 use App\Models\User;
 use Flux\Flux;
 use Illuminate\Support\Str;
@@ -19,7 +20,7 @@ class GroupForm extends Form
     public string $name = '';
 
     #[Validate('required')]
-    public array $members = [];
+    public array $invited_users = [];
 
     public ?Group $group = null;
 
@@ -32,17 +33,19 @@ class GroupForm extends Form
             'owner_id' => auth()->id()
         ]);
 
-        GroupList::create([
+        Feed::create([
             'group_id' => $group->getKey(),
             'user_id' => auth()->id(),
             'name' => Str::possessive($group->name) . ' Game Backlog'
         ]);
 
-        foreach(collect($this->members) as $member) {
-            $group->members()->attach($member, [
-                'status' => 'pending',
-                'created_at' => now(),
-                'updated_at' => now()
+        foreach(collect($this->invited_users) as $user) {
+            Invite::create([
+                'group_id' => $group->getKey(),
+                'user_id' => $user,
+                'status' => auth()->id() == $user 
+                    ? Invite::ACCEPTED 
+                    : Invite::PENDING
             ]);
         }
     }
@@ -50,7 +53,7 @@ class GroupForm extends Form
     public function edit($group)
     {
         $this->name = $group->name;
-        $this->members = $group->members->pluck('id')->toArray();
+        $this->invited_users = $group->invites->where('status', '!=', Invite::REMOVED)->pluck('user_id')->toArray();
     }
 
     public function update($group)
@@ -59,23 +62,47 @@ class GroupForm extends Form
 
         $group->update(['name' => $this->name]);
         
-        $currentMembers = $group->members()->whereIn('users.id', $this->members)->get();
+        $invites = $group->invites()
+            ->where('status', '!=', Invite::DECLINED)
+            ->with('group')
+            ->get();
+        
+        foreach ($this->invited_users as $user) {
+            if ($user == auth()->id()) {
+                continue;
+            }
 
-        foreach ($this->members as $memberId) {
-            $existingMember = $currentMembers->firstWhere('id', $memberId);
+            $userInvite = $invites->firstWhere('user_id', $user);
 
-            $existingMember
-                ? $sync[$memberId] = [
-                    'updated_at' => now()
-                ] 
-                : $sync[$memberId] = [
-                    'status' => 'pending',
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
+            if (is_null($userInvite)) {
+                $group->invites()->create([
+                    'user_id' => $user,
+                    'status' => Invite::PENDING,
+                ]);
+            } else {
+                if ($userInvite->status == Invite::REMOVED) {
+                    $userInvite->update([
+                        'status' => Invite::ACCEPTED
+                    ]);
+                }
+            }
         }
 
-        $group->members()->sync($sync);
+        foreach ($invites as $invite) {
+            if ($invite->user_id == auth()->id()) {
+                continue;
+            }
+
+            if (! collect($this->invited_users)->contains($invite->user_id)) {
+                if ($invite->status == Invite::PENDING) {
+                    $invite->delete();
+                } else {
+                    $invite->update([
+                        'status' => Invite::REMOVED,
+                    ]);
+                }   
+            }
+        }
     }
 
     public function confirm($groupId)

@@ -9,10 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class GroupList extends Model
+class Feed extends Model
 {
-    protected $table = 'lists';
-
     protected $fillable = [
         'group_id',
         'user_id',
@@ -39,12 +37,12 @@ class GroupList extends Model
 
     public function suggestions(): HasMany
     {
-        return $this->hasMany(Suggestion::class, 'list_id', 'id');
+        return $this->hasMany(Suggestion::class, 'feed_id', 'id');
     }
 
     public function votes(): HasManyThrough
     {
-        return $this->hasManyThrough(Vote::class, Suggestion::class, 'list_id', 'suggestion_id', 'id', 'id');
+        return $this->hasManyThrough(Vote::class, Suggestion::class, 'feed_id', 'suggestion_id', 'id', 'id');
     }
 
     public function getStartTimeAttribute()

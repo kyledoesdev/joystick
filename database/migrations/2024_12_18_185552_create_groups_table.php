@@ -16,16 +16,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('group_members', function(Blueprint $table) {
-            $table->id();
-            $table->foreignId('group_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('status')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        Schema::create('lists', function(Blueprint $table) {
+        Schema::create('feeds', function(Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -42,6 +33,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('groups');
-        Schema::dropIfExists('group_members');
+        Schema::dropIfExists('feeds');
     }
 };

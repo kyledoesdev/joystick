@@ -14,7 +14,7 @@ class GameForm extends Form
     #[Validate('max:24')]
     public string $gameMode = '';
 
-    public function store($list, $searchedGame)
+    public function store($feed, $searchedGame)
     {
         $this->validate();
 
@@ -26,7 +26,7 @@ class GameForm extends Form
         ]);
 
         Suggestion::create([
-            'list_id' => $list->getKey(),
+            'feed_id' => $feed->getKey(),
             'game_id' => $game->getKey(),
             'user_id' => auth()->id(),
             'game_mode' => $this->gameMode,

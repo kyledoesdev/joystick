@@ -2,20 +2,20 @@
 
 namespace App\Livewire\Feed;
 
-use App\Models\GroupList;
+use App\Models\Feed;
 use App\Models\Vote;
 use Flux\Flux;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class Feed extends Component
+class Show extends Component
 {
-    public GroupList $list;
+    public Feed $feed;
     public string $search = '';
 
     public function mount()
     {
-        $this->list = GroupList::with('group')->findOrFail(request()->id);
+        $this->feed = Feed::with('group')->findOrFail(request()->feedId);
     }
 
     #[On('game-added')]
@@ -23,7 +23,7 @@ class Feed extends Component
     public function render()
     {
         return view('livewire.feed.show', [
-            'suggestions' => $this->list->suggestions()
+            'suggestions' => $this->feed->suggestions()
                 ->when($this->search != '', function($query) {
                     $query->whereHas('game', fn($q2) => $q2->where('name', 'like', "%{$this->search}%"));
                 })
@@ -54,7 +54,7 @@ class Feed extends Component
         }
 
         $vote = Vote::updateOrCreate([
-            'group_id' => $this->list->group->getKey(),
+            'group_id' => $this->feed->group->getKey(),
             'suggestion_id' => $suggestionId,
             'user_id' => auth()->id(),
         ], [

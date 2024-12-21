@@ -20,7 +20,7 @@ class EditGroup extends Component
     
     public function mount()
     {
-        $this->group = Group::with('members')->findOrFail(request()->id);
+        $this->group = Group::with('invites')->findOrFail(request()->id);
         $this->form->edit($this->group);
     }
 

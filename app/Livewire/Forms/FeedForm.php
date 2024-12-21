@@ -2,26 +2,26 @@
 
 namespace App\Livewire\Forms;
 
-use App\Models\GroupList;
+use App\Models\Feed;
 use Carbon\Carbon;
 use Flux\Flux;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class ListForm extends Form
+class FeedForm extends Form
 {
     #[Validate('required|string|min:3|max:36')]
     public string $name = '';
 
     public $startTime = null;
 
-    public ?int $listId = null;
+    public ?int $feedId = null;
 
     public function store($group)
     {
         $this->validate();
 
-        $group->lists()->create([
+        $group->feeds()->create([
             'user_id' => auth()->id(),
             'name' => $this->name,
             'start_time' => $this->startTime != null
@@ -31,18 +31,18 @@ class ListForm extends Form
 
         $this->reset();
 
-        Flux::modal('create-list')->close();
-        Flux::toast(variant: 'success', text: 'List Created!', duration: 3000);
+        Flux::modal('create-feed')->close();
+        Flux::toast(variant: 'success', text: 'Feed Created!', duration: 3000);
     }
 
-    public function edit($listId)
+    public function edit($feedId)
     {
-        $list = GroupList::findOrFail($listId);
+        $feed = Feed::findOrFail($feedId);
 
-        $this->listId = $listId;
-        $this->name = $list->name;
-        $this->startTime = $list->start_time != null
-            ? Carbon::parse($list->start_time)->format('Y-m-d\TH:i')
+        $this->feedId = $feedId;
+        $this->name = $feed->name;
+        $this->startTime = $feed->start_time != null
+            ? Carbon::parse($feed->start_time)->format('Y-m-d\TH:i')
             : null;
     }
 
@@ -50,14 +50,14 @@ class ListForm extends Form
     {
         $this->validate();
 
-        GroupList::findOrFail($this->listId)->update([
+        Feed::findOrFail($this->feedId)->update([
             'name' => $this->name,
             'start_time' => $this->startTime != null
                 ? Carbon::parse($this->startTime, auth()->user()->timezone)->tz('UTC')
                 : null
         ]);
 
-        Flux::modal("edit-list")->close();
-        Flux::toast(variant: 'success', text: 'List Updated!', duration: 3000);
+        Flux::modal("edit-feed")->close();
+        Flux::toast(variant: 'success', text: 'Feed Updated!', duration: 3000);
     }
 }

@@ -35,11 +35,6 @@ class User extends Authenticatable
         'ip_address'
     ];
 
-    public function groups(): BelongsToMany
-    {
-        return $this->belongsToMany(Group::class, 'group_members');
-    }
-
     public function ownedGroups(): HasMany
     {
         return $this->hasMany(Group::class, 'owner_id', 'id');

@@ -9,7 +9,7 @@
         </flux:card>
             
         <div>
-            <flux:heading>Add members to your group.</flux:heading>
+            <flux:heading>Add users to your group.</flux:heading>
         </div>
             
         <flux:card>
@@ -26,6 +26,10 @@
                 
                         <flux:rows>
                             @forelse ($this->users as $user)
+                                @php
+                                    $userInvite = $this->group->invites->firstWhere('user_id', $user->getKey());
+                                @endphp
+
                                 <flux:row :key="$user->id">
                                     <flux:cell class="flex items-center gap-3">
                                         <flux:avatar src="{{ $user->avatar }}" />
@@ -34,9 +38,15 @@
                                     </flux:cell>
                 
                                     <flux:cell>
-                                        <flux:checkbox.group class="mb-3" wire:model.live="form.members">
-                                            <flux:checkbox value="{{ $user->getKey() }}" />
+                                        <flux:checkbox.group class="mb-3" wire:model.live="form.invited_users">
+                                            @if ($user->getKey() == auth()->id())
+                                                <flux:checkbox value="{{ $user->getKey() }}" disabled />
+                                            @else
+                                                <flux:checkbox value="{{ $user->getKey() }}" />
+                                            @endif
                                         </flux:checkbox.group>
+
+                                        {{ $userInvite?->status }}
                                     </flux:cell>
                                 </flux:row>
                             @empty
@@ -49,7 +59,7 @@
         </flux:card>
     
         <flux:card>
-            @if (!empty($this->form->members))
+            @if (!empty($this->form->invited_users))
                 <flux:button variant="primary" wire:click="update">
                     Update Group
                 </flux:button>

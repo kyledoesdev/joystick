@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\WelcomeController;
-use App\Http\Middleware\FeedMiddleware;
+use App\Http\Middleware\GroupMiddleware;
 use App\Livewire\Dashboard;
-use App\Livewire\Feed\Feed;
+use App\Livewire\Feed\Show as FeedShow;
 use App\Livewire\Group\CreateGroup;
 use App\Livewire\Group\EditGroup;
-use App\Livewire\Group\Lists;
+use App\Livewire\Group\GroupFeeds;
+use App\Livewire\Group\Show as GroupShow;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', WelcomeController::class)->name('welcome');
@@ -22,7 +23,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/group/create', CreateGroup::class)->name('group.create');
     Route::get('/group/{id}/edit', EditGroup::class)->name('group.edit');
 
-    Route::get('/group/{id}/lists', Lists::class)->name('group.lists');
-    
-    Route::get('/list/{id}/feed', Feed::class)->middleware(FeedMiddleware::class)->name('feed');
+    Route::middleware(GroupMiddleware::class)->group(function() {
+        Route::get('/group/{groupId}', GroupShow::class)->name('group');
+        Route::get('/group/{groupId}/feed/{feedId}', FeedShow::class)->name('feed');
+    });
 });

@@ -9,7 +9,7 @@
         </flux:card>
 
         <div>
-            <flux:heading>Add members to your group.</flux:heading>
+            <flux:heading>Add users to your group.</flux:heading>
         </div>
         
         <flux:card>
@@ -34,7 +34,7 @@
                                     </flux:cell>
                 
                                     <flux:cell>
-                                        <flux:checkbox.group class="mb-3" wire:model.live="form.members">
+                                        <flux:checkbox.group class="mb-3" wire:model.live="form.invited_users">
                                             <flux:checkbox value="{{ $user->getKey() }}" />
                                         </flux:checkbox.group>
                                     </flux:cell>
@@ -49,7 +49,7 @@
         </flux:card>
 
         <flux:card>
-            @if (!empty($this->form->members))
+            @if (!empty($this->form->invited_users))
                 <flux:button variant="primary" wire:click="store">
                     Create Group
                 </flux:button>

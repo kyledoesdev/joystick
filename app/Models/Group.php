@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Models\GroupGame;
 use App\Models\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Group extends Model
@@ -20,20 +20,18 @@ class Group extends Model
         $this->hasOne(User::class, 'owner_id', 'id');
     }
 
-    public function members(): BelongsToMany
+    public function feeds(): HasMany
     {
-        return $this->belongsToMany(User::class, 'group_members')
-            ->withPivot(['status'])
-            ->withTimestamps();
+        return $this->hasMany(Feed::class);
     }
 
-    public function lists(): HasMany
+    public function invites(): HasMany
     {
-        return $this->hasMany(GroupList::class);
+        return $this->hasMany(Invite::class);
     }
 
-    public function suggestions()
+    public function suggestions(): HasManyThrough
     {
-        return $this->hasManyThrough(Suggestion::class, GroupList::class);
+        return $this->hasManyThrough(Suggestion::class, Feed::class);
     }
 }

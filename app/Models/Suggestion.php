@@ -9,15 +9,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Suggestion extends Model
 {
     protected $fillable = [
-        'list_id',
+        'feed_id',
         'game_id',
         'user_id',
         'game_mode',
     ];
 
-    public function list(): BelongsTo
+    public function feed(): BelongsTo
     {
-        return $this->belongsTo(GroupList::class);
+        return $this->belongsTo(Feed::class);
     }
 
     public function game(): HasOne

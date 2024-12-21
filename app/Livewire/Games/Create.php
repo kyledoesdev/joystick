@@ -3,8 +3,7 @@
 namespace App\Livewire\Games;
 
 use App\Livewire\Forms\GameForm;
-use App\Models\Group;
-use App\Models\GroupList;
+use App\Models\Feed;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -13,7 +12,7 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    public GroupList $list;
+    public Feed $feed;
     public GameForm $form;
 
     public $searchedGame = null;
@@ -31,7 +30,7 @@ class Create extends Component
 
     public function store()
     {
-        $this->form->store($this->list, $this->searchedGame);
+        $this->form->store($this->feed, $this->searchedGame);
 
         $this->dispatch('game-added');
 

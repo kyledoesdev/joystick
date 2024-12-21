@@ -19,7 +19,7 @@ return new class extends Migration
 
         Schema::create('suggestions', function(Blueprint $table) {
             $table->id();
-            $table->foreignId('list_id')->constrained()->onDelete('cascade');
+            $table->foreignId('feed_id')->constrained()->onDelete('cascade');
             $table->foreignId('game_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('game_mode')->nullable();

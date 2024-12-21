@@ -1,30 +1,30 @@
 <div>
-    <x-slot name="header">{{ Str::possessive($group->name) }} Lists</x-slot>
+    <x-slot name="header">{{ Str::possessive($group->name) }} Feeds</x-slot>
 
     <flux:card class="my-4">
         <div class="flex justify-end">
-            <flux:modal.trigger name="create-list">
-                <flux:button variant="primary" size="sm" icon="plus">Create List</flux:button>
+            <flux:modal.trigger name="create-feed">
+                <flux:button variant="primary" size="sm" icon="plus">Create Feed</flux:button>
             </flux:modal.trigger>
         </div>
     </flux:card>
 
     <flux:card>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach ($this->lists as $list)
+            @foreach ($this->feeds as $feed)
                 <flux:card
                     class="flex flex-col my-4"
-                    wire:key="list-{{ $list->getKey() }}"
+                    wire:key="feed-{{ $feed->getKey() }}"
                 >
                     <div class="flex justify-between mx-2 mb-2">
                         <div>
-                            <h5 class="underline">{{ $list->name }}</h5> 
+                            <h5 class="underline">{{ $feed->name }}</h5> 
                         </div>
                         
-                        @if ($list->user_id == auth()->id())
+                        @if ($feed->user_id == auth()->id())
                             <div>
-                                <flux:modal.trigger name="edit-list">
-                                    <flux:button variant="primary" size="xs" icon="pencil-square" wire:click="edit({{ $list->getKey() }})" />
+                                <flux:modal.trigger name="edit-feed">
+                                    <flux:button variant="primary" size="xs" icon="pencil-square" wire:click="edit({{ $feed->getKey() }})" />
                                 </flux:modal.trigger>                            
 
                                 <flux:button variant="danger" size="xs" icon="trash" />
@@ -32,20 +32,20 @@
                         @endif
                     </div>
 
-                    <a class="mx-2 space-y-4" href="{{ route('feed', ['id' => $list->getKey()]) }}">
-                        @if ($list->start_time != null)
+                    <a class="mx-2 space-y-4" href="{{ route('feed', ['groupId' => $group->getKey(), 'feedId' => $feed->getKey()]) }}">
+                        @if ($feed->start_time != null)
                             <div>
                                 <flux:badge size="sm">
-                                    {{ $list->start_time }}
+                                    {{ $feed->start_time }}
                                 </flux:badge>
                             </div>
                         @endif
 
                         <div>
-                            <flux:badge icon="squares-2x2" color="sky">Games: {{ $list->suggestions_count }}</flux:badge>
+                            <flux:badge icon="squares-2x2" color="sky">Games: {{ $feed->suggestions_count }}</flux:badge>
                         </div>
                         <div>
-                            <flux:badge icon="star" color="amber">Total Votes: {{ $list->votes_count }}</flux:badge>
+                            <flux:badge icon="star" color="amber">Total Votes: {{ $feed->votes_count }}</flux:badge>
                         </div>
                     </a>
                 </flux:card>
@@ -54,9 +54,9 @@
     </flux:card>
 
     {{-- Create Modal --}}
-    <flux:modal variant="flyout" name="create-list">
+    <flux:modal variant="flyout" name="create-feed">
         <div class="mb-4">
-            <flux:heading size="lg">Create a new List</flux:heading>
+            <flux:heading size="lg">Create a new Feed</flux:heading>
         </div>
 
         <div class="space-y-4">
@@ -73,9 +73,9 @@
     </flux:modal>
 
     {{-- Edit Modal --}}
-    <flux:modal variant="flyout" name="edit-list">
+    <flux:modal variant="flyout" name="edit-feed">
         <div class="mb-4">
-            <flux:heading size="lg">Edit List: {{ $this->editForm->name }}</flux:heading>
+            <flux:heading size="lg">Edit Feed: {{ $this->editForm->name }}</flux:heading>
         </div>
 
         <div class="space-y-4">

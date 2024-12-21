@@ -1,6 +1,6 @@
 <div>
-    <x-slot name="header">{{ $list->name }}</x-slot>
-    <x-slot name="subheader">{{ $list->start_time }}</x-slot>
+    <x-slot name="header">{{ $feed->name }}</x-slot>
+    <x-slot name="subheader">{{ $feed->start_time }}</x-slot>
     <x-slot name="action">
         <flux:button size="sm" href="{{ url()->previous() }}" variant="primary">
             Back
@@ -10,7 +10,7 @@
     <flux:card class="my-4">
         <div class="flex justify-between">
             <livewire:feed.search />
-            <livewire:games.create :list="$list" />
+            <livewire:games.create :feed="$feed" />
         </div>
     </flux:card>
 
@@ -100,7 +100,7 @@
                         @if ($search != '')
                             No matches found for: {{ $search }}
                         @else
-                            No games found in this list.
+                            No games found in this feed.
                         @endif
                     </flux:badge>
                 </flux:card>
