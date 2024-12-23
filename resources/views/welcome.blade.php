@@ -1,7 +1,7 @@
 <x-guest-layout>
-    <x-slot name="header">Welcome to Kyle's FLLAT Starting Kit.</x-slot>
+    <x-slot name="header">Joystick Jury</x-slot>
 
     <flux:card class="my-4">
-        Yo
+        An easy way to vote on what game your group should play on game night.
     </flux:card>
 </x-guest-layout>

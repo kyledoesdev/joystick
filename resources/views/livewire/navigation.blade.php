@@ -22,13 +22,9 @@ new class extends Component
     <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
     <flux:navbar class="-mb-px max-lg:hidden">
-        <flux:navbar.item icon="home" href="{{ route('welcome') }}" :current="request()->is('/')">
-            Home
-        </flux:navbar.item>
-
         @auth
             <flux:navbar.item icon="adjustments-horizontal" href="{{ route('dashboard') }}" :current="request()->is('dashboard')">
-                Dashboard
+                Groups
             </flux:navbar.item>
 
             <flux:navbar.item

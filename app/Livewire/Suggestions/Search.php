@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Feed;
+namespace App\Livewire\Suggestions;
 
 use Livewire\Component;
 

@@ -50,11 +50,24 @@ class User extends Authenticatable
         return $this->hasMany(Invite::class);
     }
 
-    public static function forGroupFormTable(string $search, string $sortBy, string $sortDirection)
+    public static function forGroupFormTable($groupId = null, string $search, string $sortBy, string $sortDirection)
     {
         return self::query()
-            ->select('id', 'name', 'avatar')
-            ->when($search != '', fn($q) => $q->where('name', 'like', "%{$search}%"))
+            ->select([
+                'users.id',
+                'users.name',
+                'users.avatar',
+                'invite_statuses.display_name as status_name',
+                'invite_statuses.badge_color as status_color'
+            ])
+            ->leftJoin('invites', function($join) use ($groupId) {
+                $join->on('users.id', '=', 'invites.user_id')
+                    ->where('invites.group_id', '=', $groupId);
+            })
+            ->leftJoin('invite_statuses', function($join) use ($groupId) {
+                $join->on('invites.status_id', '=', 'invite_statuses.id');
+            })
+            ->when($search != '', fn($q) => $q->where('users.name', 'like', "%{$search}%"))
             ->tap(fn ($query) => $sortBy ? $query->orderBy($sortBy, $sortDirection) : $query)
             ->paginate(5);
     }

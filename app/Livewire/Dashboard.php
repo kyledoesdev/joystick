@@ -32,6 +32,11 @@ class Dashboard extends Component
             ->get();
     }
 
+    public function store()
+    {
+        $this->form->store();
+    }
+
     public function confirm($groupId)
     {
         $this->form->confirm($groupId);

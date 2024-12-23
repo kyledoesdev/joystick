@@ -15,7 +15,7 @@ class FeedForm extends Form
 
     public $startTime = null;
 
-    public ?int $feedId = null;
+    public ?Feed $feed = null;
 
     public function store($group)
     {
@@ -37,12 +37,11 @@ class FeedForm extends Form
 
     public function edit($feedId)
     {
-        $feed = Feed::findOrFail($feedId);
+        $this->feed = Feed::findOrFail($feedId);
 
-        $this->feedId = $feedId;
-        $this->name = $feed->name;
-        $this->startTime = $feed->start_time != null
-            ? Carbon::parse($feed->start_time)->format('Y-m-d\TH:i')
+        $this->name = $this->feed->name;
+        $this->startTime = $this->feed->start_time != null
+            ? Carbon::parse($this->feed->start_time)->format('Y-m-d\TH:i')
             : null;
     }
 
@@ -59,5 +58,20 @@ class FeedForm extends Form
 
         Flux::modal("edit-feed")->close();
         Flux::toast(variant: 'success', text: 'Feed Updated!', duration: 3000);
+    }
+
+    public function confirm($feedId)
+    {
+        $this->feed = Feed::findOrFail($feedId);
+
+        Flux::modal('destroy-feed')->show();
+    }
+
+    public function destroy()
+    {
+        $this->feed->delete();
+
+        Flux::modal('destroy-feed')->close();
+        Flux::toast(variant: 'success', text: 'Feed Deleted!', duration: 3000);
     }
 }

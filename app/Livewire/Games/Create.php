@@ -32,7 +32,7 @@ class Create extends Component
     {
         $this->form->store($this->feed, $this->searchedGame);
 
-        $this->dispatch('game-added');
+        $this->dispatch('game-update');
 
         $this->clear();
 

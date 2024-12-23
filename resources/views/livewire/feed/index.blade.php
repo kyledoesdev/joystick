@@ -12,49 +12,54 @@
     @endif
 
     <flux:card>
-        <div :class="count($this->feeds) ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : ''">
-            @forelse ($this->feeds as $feed)
-                <flux:card
-                    class="flex flex-col my-4"
-                    wire:key="feed-{{ $feed->getKey() }}"
-                >
-                    <div class="flex justify-between mx-2 mb-2">
-                        <div>
-                            <h5 class="underline">{{ $feed->name }}</h5> 
-                        </div>
-                        
-                        @if ($feed->user_id == auth()->id())
+        @if (count($this->feeds))
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach ($this->feeds as $feed)
+                    <flux:card
+                        class="flex flex-col my-4"
+                        wire:key="feed-{{ $feed->getKey() }}"
+                    >
+                        <div class="flex justify-between mx-2 mb-2">
                             <div>
-                                <flux:modal.trigger name="edit-feed">
-                                    <flux:button variant="primary" size="xs" icon="pencil-square" wire:click="edit({{ $feed->getKey() }})" />
-                                </flux:modal.trigger>                            
-
-                                <flux:button variant="danger" size="xs" icon="trash" />
+                                <h5 class="underline">{{ $feed->name }}</h5> 
                             </div>
-                        @endif
-                    </div>
+                            
+                            @if ($feed->user_id == auth()->id())
+                                <div>
+                                    <flux:modal.trigger name="edit-feed">
+                                        <flux:button variant="primary" size="xs" icon="pencil-square" wire:click="edit({{ $feed->getKey() }})" />
+                                    </flux:modal.trigger>                            
 
-                    <a class="mx-2 space-y-4" href="{{ route('feed', ['groupId' => $group->getKey(), 'feedId' => $feed->getKey()]) }}">
-                        @if ($feed->start_time != null)
+                                    <flux:modal.trigger name="destroy-feed">
+                                        <flux:button variant="danger" size="xs" icon="trash" wire:click="confirm({{ $feed->getKey() }})" />
+                                    </flux:modal.trigger>
+                                </div>
+                            @endif
+                        </div>
+
+                        <a class="mx-2 space-y-4" href="{{ route('feed', ['groupId' => $group->getKey(), 'feedId' => $feed->getKey()]) }}">
+                            @if ($feed->start_time != null)
+                                <div>
+                                    <flux:badge size="sm">
+                                        {{ $feed->start_time }}
+                                    </flux:badge>
+                                </div>
+                            @endif
+
                             <div>
-                                <flux:badge size="sm">
-                                    {{ $feed->start_time }}
-                                </flux:badge>
+                                <flux:badge icon="squares-2x2" color="sky">Games: {{ $feed->suggestions_count }}</flux:badge>
                             </div>
-                        @endif
+                            <div>
+                                <flux:badge icon="star" color="amber">Total Votes: {{ $feed->votes_count }}</flux:badge>
+                            </div>
+                        </a>
+                    </flux:card>
 
-                        <div>
-                            <flux:badge icon="squares-2x2" color="sky">Games: {{ $feed->suggestions_count }}</flux:badge>
-                        </div>
-                        <div>
-                            <flux:badge icon="star" color="amber">Total Votes: {{ $feed->votes_count }}</flux:badge>
-                        </div>
-                    </a>
-                </flux:card>
-            @empty
-                <x-empty-table message="No feeds have been created for this group." />
-            @endforelse
-        </div>
+                @endforeach
+            </div>
+        @else
+            <x-empty-collection message="No feeds found." />
+        @endif
     </flux:card>
 
     {{-- Create Modal --}}
@@ -92,6 +97,20 @@
             <flux:spacer />
 
             <flux:button size="sm" variant="primary" wire:click="update">Update</flux:button>
+        </div>
+    </flux:modal>
+
+    {{-- Destroy Confirm Modal --}}
+    <flux:modal name="destroy-feed" class="md:w-96 space-y-6">
+        <div>
+            <flux:heading size="lg">Delete Feed: {{ $editForm->feed?->name }}?</flux:heading>
+            <flux:subheading>Are you sure you want to delete this feed, it's game suggestions & all of the votes?</flux:subheading>
+        </div>
+
+        <div class="flex">
+            <flux:spacer />
+
+            <flux:button type="submit" variant="danger" size="xs" wire:click="destroy">Delete</flux:button>
         </div>
     </flux:modal>
 </div>

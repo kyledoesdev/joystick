@@ -27,12 +27,14 @@ class Edit extends Component
     public function update()
     {
         $this->form->update($this->suggestion);
+
+        $this->dispatch('game-update');
     }
 
     public function destroy()
     {
         $this->form->destroy($this->suggestion);
 
-        $this->dispatch('game-deleted');
+        $this->dispatch('game-update');
     }
 }

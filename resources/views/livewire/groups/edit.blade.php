@@ -31,13 +31,10 @@
                             @if ($loop->first)
                                 <flux:columns>
                                     <flux:column sortable :sorted="$this->sortBy === 'name'" :direction="$this->sortDirection" wire:click="sort('name')">Name</flux:column>
+                                    <flux:column sortable :sorted="$this->sortBy === 'status_name'" :direction="$this->sortDirection" wire:click="sort('status_name')">Status</flux:column>
                                     <flux:column></flux:column>
                                 </flux:columns>
                             @endif
-
-                            @php
-                                $userInvite = $this->group->invites->firstWhere('user_id', $user->getKey());
-                            @endphp
 
                             <flux:rows>
                                 <flux:row :key="$user->id">
@@ -48,6 +45,10 @@
                                     </flux:cell>
 
                                     <flux:cell>
+                                        <flux:badge variant="solid" :color="$user->status_color">{{ $user->status_name ?? 'Not Invited' }}</flux:badge>
+                                    </flux:cell>
+
+                                    <flux:cell>
                                         <flux:checkbox.group class="mb-3" wire:model.live="form.invited_users">
                                             @if ($user->getKey() == auth()->id())
                                                 <flux:checkbox value="{{ $user->getKey() }}" checked disabled />
@@ -55,13 +56,11 @@
                                                 <flux:checkbox value="{{ $user->getKey() }}" />
                                             @endif
                                         </flux:checkbox.group>
-
-                                        {{ $userInvite?->status?->display_name }}
                                     </flux:cell>
                                 </flux:row>
                             </flux:rows>
                         @empty
-                            <x-empty-table :search="$search" message="No users found for term: {{ $search }}" />
+                            <x-empty-collection :search="$search" message="No users found for term: {{ $search }}" />
                         @endforelse
                     </flux:table>
                 </flux:card>

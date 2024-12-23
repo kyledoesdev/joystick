@@ -37,7 +37,7 @@
                     </flux:row>
                 </flux:rows>
             @empty
-                <x-empty-table message="No invites left to review." />
+                <x-empty-collection message="No invites left to review." />
             @endforelse            
         </flux:table>
     </flux:card>

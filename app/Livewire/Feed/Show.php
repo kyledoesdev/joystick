@@ -2,65 +2,57 @@
 
 namespace App\Livewire\Feed;
 
+use App\Livewire\Forms\FeedForm;
 use App\Models\Feed;
-use App\Models\Vote;
-use Flux\Flux;
-use Livewire\Attributes\On;
+use App\Models\Group;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Show extends Component
 {
-    public Feed $feed;
-    public string $search = '';
+    public Group $group;
+
+    public FeedForm $createForm;
+    public FeedForm $editForm;
 
     public function mount()
     {
-        $this->feed = Feed::with('group')->findOrFail(request()->feedId);
+        $this->group = Group::with('feeds')->findOrFail(request()->groupId);
     }
 
-    #[On('game-added')]
-    #[On('game-deleted')]
     public function render()
     {
-        return view('livewire.feed.show', [
-            'suggestions' => $this->feed->suggestions()
-                ->when($this->search != '', function($query) {
-                    $query->whereHas('game', fn($q2) => $q2->where('name', 'like', "%{$this->search}%"));
-                })
-                ->withCount([
-                    'votes as positive_votes_count' => fn($q) => $q->where('vote', Vote::UP_VOTE),
-                    'votes as neutral_votes_count' => fn($q) => $q->where('vote', Vote::NEUTRAL),
-                    'votes as down_votes_count' => fn($q) => $q->where('vote', Vote::DOWN_VOTE),
-                ])
-                ->with('user', 'game')
-                ->orderBy('positive_votes_count', 'desc')
-                ->orderBy('neutral_votes_count', 'desc')
-                ->orderBy('down_votes_count', 'desc')
-                ->get()
-        ]);
+        return view('livewire.feed.index');
     }
 
-    #[On('search-updated')]
-    public function updatedSearch($value)
+    #[Computed]
+    public function feeds()
     {
-        $this->search = $value;
+        return $this->group->feeds()->withCount('suggestions', 'votes')->orderBy('start_time', 'desc')->get();
     }
 
-    public function store($suggestionId, $vote)
+    public function store()
     {
-        if (!in_array($vote, Vote::getTypes())) {
-            Flux::toast(variant: 'warning', text: "Not a valid vote action.", duration: 2000);
-            return;
-        }
+        $this->createForm->store($this->group);
+    }
 
-        $vote = Vote::updateOrCreate([
-            'group_id' => $this->feed->group->getKey(),
-            'suggestion_id' => $suggestionId,
-            'user_id' => auth()->id(),
-        ], [
-            'vote' => $vote,
-        ]);
+    public function edit($feedId)
+    {
+        $this->editForm->edit($feedId);
+    }
 
-        Flux::toast(variant: 'success', text: "Vote Saved!", duration: 3000);
+    public function update()
+    {
+        $this->editForm->update();
+    }
+
+    public function confirm($feedId)
+    {
+        $this->editForm->confirm($feedId);
+    }
+
+    public function destroy()
+    {
+        $this->editForm->destroy();
     }
 }

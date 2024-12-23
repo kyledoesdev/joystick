@@ -10,7 +10,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class EditGroup extends Component
+class Edit extends Component
 {
     use TableHelpers;
     use WithPagination;
@@ -35,15 +35,11 @@ class EditGroup extends Component
     public function update()
     {
         $this->form->update($this->group);
-
-        session()->flash('success', 'Group updated successfully.');
-
-        $this->redirect(route('dashboard'));
     }
 
     #[Computed]
     public function users()
     {
-        return User::forGroupFormTable($this->search, $this->sortBy, $this->sortDirection);
+        return User::forGroupFormTable($this->group->getKey(), $this->search, $this->sortBy, $this->sortDirection);
     }
 }

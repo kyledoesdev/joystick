@@ -38,7 +38,7 @@ class Index extends Component
                 'owners.name as owner_name',
                 'invites.id as invite_id',
                 'invites.invited_at',
-                'invites.status',
+                'invites.status_id',
             ])
             ->join('groups', 'invites.group_id', '=', 'groups.id')
             ->join('users as owners', 'groups.owner_id', '=', 'owners.id')
@@ -46,7 +46,7 @@ class Index extends Component
                 $join->on('users.id', '=', 'invites.user_id')
                     ->where('invites.user_id', '=', auth()->id());
             })
-            ->where('invites.status', InviteStatus::PENDING)
+            ->where('invites.status_id', InviteStatus::PENDING)
             ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
             ->get();
     }
