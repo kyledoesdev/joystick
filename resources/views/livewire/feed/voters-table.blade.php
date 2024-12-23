@@ -9,7 +9,7 @@
             <flux:subheading>{{ $suggestion->caption }}</flux:subheading>
         </div>
 
-        <flux:table class="my-4" :paginate="$this->votes">
+        <flux:table class="my-4" :paginate="count($this->votes) ? $this->votes : false">
             <flux:columns>
                 <flux:column></flux:column>
                 <flux:column>User</flux:column>

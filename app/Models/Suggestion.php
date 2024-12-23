@@ -5,9 +5,12 @@ namespace App\Models;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Suggestion extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'feed_id',
         'game_id',

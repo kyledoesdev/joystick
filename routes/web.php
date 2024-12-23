@@ -9,6 +9,7 @@ use App\Livewire\Group\CreateGroup;
 use App\Livewire\Group\EditGroup;
 use App\Livewire\Group\GroupFeeds;
 use App\Livewire\Group\Show as GroupShow;
+use App\Livewire\Invites\Index;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', WelcomeController::class)->name('welcome');
@@ -27,4 +28,6 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/group/{groupId}', GroupShow::class)->name('group');
         Route::get('/group/{groupId}/feed/{feedId}', FeedShow::class)->name('feed');
     });
+
+    Route::get('/invites', Index::class)->name('invites');
 });

@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('cover')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('suggestions', function(Blueprint $table) {

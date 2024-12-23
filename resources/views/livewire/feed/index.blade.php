@@ -1,17 +1,19 @@
 <div>
     <x-slot name="header">{{ Str::possessive($group->name) }} Feeds</x-slot>
 
-    <flux:card class="my-4">
-        <div class="flex justify-end">
-            <flux:modal.trigger name="create-feed">
-                <flux:button variant="primary" size="sm" icon="plus">Create Feed</flux:button>
-            </flux:modal.trigger>
-        </div>
-    </flux:card>
+    @if ($group->owner_feeds_only == false || ($group->owner_create_feeds == true && $group->owner_id == auth()->id()))
+        <flux:card class="my-4">
+            <div class="flex justify-end">
+                <flux:modal.trigger name="create-feed">
+                    <flux:button variant="primary" size="sm" icon="plus">Create Feed</flux:button>
+                </flux:modal.trigger>
+            </div>
+        </flux:card>
+    @endif
 
     <flux:card>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach ($this->feeds as $feed)
+        <div :class="count($this->feeds) ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : ''">
+            @forelse ($this->feeds as $feed)
                 <flux:card
                     class="flex flex-col my-4"
                     wire:key="feed-{{ $feed->getKey() }}"
@@ -49,7 +51,9 @@
                         </div>
                     </a>
                 </flux:card>
-            @endforeach
+            @empty
+                <x-empty-table message="No feeds have been created for this group." />
+            @endforelse
         </div>
     </flux:card>
 

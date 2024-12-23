@@ -21,6 +21,9 @@ class EditGroup extends Component
     public function mount()
     {
         $this->group = Group::with('invites')->findOrFail(request()->id);
+
+        abort_if($this->group->owner_id != auth()->id(), 403);
+
         $this->form->edit($this->group);
     }
 

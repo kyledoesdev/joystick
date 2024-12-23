@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('owner_id')->contstrained()->onDelete('cascade');
             $table->string('name');
+            $table->boolean('owner_feeds_only')->default(false)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

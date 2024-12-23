@@ -30,6 +30,14 @@ new class extends Component
             <flux:navbar.item icon="adjustments-horizontal" href="{{ route('dashboard') }}" :current="request()->is('dashboard')">
                 Dashboard
             </flux:navbar.item>
+
+            <flux:navbar.item
+                href="{{ route('invites') }}"
+                icon="envelope" 
+                :current="request()->is('invites')"
+            >
+                <livewire:invites.navigation-badge />
+            </flux:navbar.item>
         @endauth
 
     </flux:navbar>

@@ -4,7 +4,15 @@
     <div class="space-y-4">
         <flux:card>
             <div class="flex space-y-4">
-                <flux:input label="Group Name" wire:model.live.debounce.500ms="form.name" placeholder="My Group" required />
+                <div class="space-y-4">
+                    <flux:input label="Group Name" wire:model.live.debounce.500ms="form.name" placeholder="My Group" required />
+                    <flux:separator />
+                    <flux:checkbox
+                        wire:model="form.ownerFeedsOnly"
+                        label="Only group owner (you) can create feeds?" 
+                        required
+                    />
+                </div>
             </div>
         </flux:card>
             
@@ -18,56 +26,52 @@
                     <flux:input label="Search" placeholder="Your friend's name.." wire:model.live.debounce.500ms="search" icon-trailing="magnifying-glass" />
                 </div>
                 <flux:card>
-                    <flux:table :paginate="$this->users">
-                        <flux:columns>
-                            <flux:column sortable :sorted="$this->sortBy === 'name'" :direction="$this->sortDirection" wire:click="sort('name')">Name</flux:column>
-                            <flux:column></flux:column>
-                        </flux:columns>
-                
-                        <flux:rows>
-                            @forelse ($this->users as $user)
-                                @php
-                                    $userInvite = $this->group->invites->firstWhere('user_id', $user->getKey());
-                                @endphp
+                    <flux:table :paginate="count($this->users) ? $this->users : false">
+                        @forelse ($this->users as $user)
+                            @if ($loop->first)
+                                <flux:columns>
+                                    <flux:column sortable :sorted="$this->sortBy === 'name'" :direction="$this->sortDirection" wire:click="sort('name')">Name</flux:column>
+                                    <flux:column></flux:column>
+                                </flux:columns>
+                            @endif
 
+                            @php
+                                $userInvite = $this->group->invites->firstWhere('user_id', $user->getKey());
+                            @endphp
+
+                            <flux:rows>
                                 <flux:row :key="$user->id">
                                     <flux:cell class="flex items-center gap-3">
                                         <flux:avatar src="{{ $user->avatar }}" />
-                
+
                                         {{ $user->name }}
                                     </flux:cell>
-                
+
                                     <flux:cell>
                                         <flux:checkbox.group class="mb-3" wire:model.live="form.invited_users">
                                             @if ($user->getKey() == auth()->id())
-                                                <flux:checkbox value="{{ $user->getKey() }}" disabled />
+                                                <flux:checkbox value="{{ $user->getKey() }}" checked disabled />
                                             @else
                                                 <flux:checkbox value="{{ $user->getKey() }}" />
                                             @endif
                                         </flux:checkbox.group>
 
-                                        {{ $userInvite?->status }}
+                                        {{ $userInvite?->status?->display_name }}
                                     </flux:cell>
                                 </flux:row>
-                            @empty
-                                <span>No users found.</span>
-                            @endforelse
-                        </flux:rows>
+                            </flux:rows>
+                        @empty
+                            <x-empty-table :search="$search" message="No users found for term: {{ $search }}" />
+                        @endforelse
                     </flux:table>
                 </flux:card>
             </div>
         </flux:card>
     
         <flux:card>
-            @if (!empty($this->form->invited_users))
-                <flux:button variant="primary" wire:click="update">
-                    Update Group
-                </flux:button>
-            @else
-                <flux:button variant="outline" style="cursor: not-allowed;">
-                    Update Group
-                </flux:button>
-            @endif  
+            <flux:button variant="primary" wire:click="update">
+                Update Group
+            </flux:button>
         </flux:card>
     </div>
 </div>

@@ -15,6 +15,11 @@ class CreateGroup extends Component
     use WithPagination;
 
     public GroupForm $form;
+
+    public function mount()
+    {
+        $this->form->invited_users[] = auth()->id();
+    }
     
     public function render()
     {

@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->hasMany(Vote::class, 'user_id', 'id');
     }
 
+    public function invites(): HasMany
+    {
+        return $this->hasMany(Invite::class);
+    }
+
     public static function forGroupFormTable(string $search, string $sortBy, string $sortDirection)
     {
         return self::query()

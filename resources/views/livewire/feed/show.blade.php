@@ -95,15 +95,7 @@
                     @endif
                 </flux:card>
             @empty
-                <flux:card class="flex justify-center">
-                    <flux:badge variant="solid">
-                        @if ($search != '')
-                            No matches found for: {{ $search }}
-                        @else
-                            No games found in this feed.
-                        @endif
-                    </flux:badge>
-                </flux:card>
+                <x-empty-table :search="$search" message="No games found in this feed." />
             @endforelse
         </div>
     </div>

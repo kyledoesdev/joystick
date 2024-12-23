@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use App\Livewire\Forms\GroupForm;
 use App\Models\Group;
-use App\Models\Invite;
+use App\Models\InviteStatus;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -24,7 +24,7 @@ class Dashboard extends Component
         return Group::query()
             ->whereHas('invites', function($query) {
                 $query->newQuery()
-                    ->where('status', Invite::ACCEPTED)
+                    ->where('status_id', InviteStatus::ACCEPTED)
                     ->where('user_id', auth()->id());
             })
             ->with('feeds.suggestions.votes')
