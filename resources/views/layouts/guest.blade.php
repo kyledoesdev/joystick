@@ -15,33 +15,16 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @fluxStyles
     </head>
-    <body class="min-h-screen" x-cloak x-data>
-        <livewire:navigation />
+    <body>
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 ">
+            <div class="text-4xl">
+                🕹️
+            </div>
 
-        <!-- Page Content -->
-        <flux:main container>
-            @include('layouts.partials.messages')
-
-            @if (isset($header))
-                <div class="flex justify-between">
-                    <div class="w-full sm:w-auto">
-                        <h5 class="text-2xl lg:text-4xl font-bold">
-                            {{ $header }}
-                        </h5>
-                    </div>
-                </div>  
-                
-                <flux:separator />
-            @endif
-
-            <div class="mt-4">
+            <div class="w-full sm:max-w-md mt-6 px-6 py-4hadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>
-        </flux:main>
-
-        @persist('toast')
-            <flux:toast position="top right" />
-        @endpersist
+        </div>
 
         @fluxScripts
     </body>

@@ -18,6 +18,23 @@ class Feed extends Model
         'start_time'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        $user = auth()->check() ? auth()->user()->name : null;
+
+        static::creating(function($model) use ($user) {
+            $startTime = $model->start_time != null ? "which has a start time of: {$model->start_time}." : '.';
+
+            $model->group->writeToDiscord("{$user} created feed: {$model->name} {$startTime}");
+        });
+
+        static::deleted(function($model) use ($user)  {
+            $model->group->writeToDiscord("{$user} deleted feed: {$model->name}.", 'error');
+        });
+    }
+
     public function casts(): array
     {
         return [

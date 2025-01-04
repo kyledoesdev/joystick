@@ -17,6 +17,8 @@ class GroupFactory extends Factory
         return [
             'owner_id' => User::factory()->create(),
             'name' => 'Royalty',
+            'discord_webhook_url' => null,
+            'discord_updates' => false,
             'owner_feeds_only' => false,
         ];
     }
@@ -34,6 +36,7 @@ class GroupFactory extends Factory
                 'group_id' => $group->getKey(),
                 'user_id' => $group->owner_id,
                 'name' => Str::possessive($group->name) . ' Backlog',
+                'start_time' => now(),
             ]);
         });
     }

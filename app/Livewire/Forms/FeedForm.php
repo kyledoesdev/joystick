@@ -49,7 +49,7 @@ class FeedForm extends Form
     {
         $this->validate();
 
-        Feed::findOrFail($this->feedId)->update([
+        $this->feed->update([
             'name' => $this->name,
             'start_time' => $this->startTime != null
                 ? Carbon::parse($this->startTime, auth()->user()->timezone)->tz('UTC')

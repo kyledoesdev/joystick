@@ -16,7 +16,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @fluxStyles
     </head>
-    <body class="min-h-screen" x-cloak x-data>
+    <body class="min-h-screen">
         <livewire:navigation />
 
         <flux:main container>

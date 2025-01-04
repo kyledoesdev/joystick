@@ -8,7 +8,9 @@ use App\Models\Feed;
 use App\Models\Group;
 use App\Models\Invite;
 use App\Models\InviteStatus;
+use Exception;
 use Flux\Flux;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
@@ -23,6 +25,12 @@ class GroupForm extends Form
     #[Validate('required|boolean')]
     public bool $ownerFeedsOnly = false;
 
+    #[Validate('nullable|string|max:255')]
+    public $discordWebHook = '';
+
+    #[Validate('nullable|boolean')]
+    public $discordUpdates = false;
+
     public array $invited_users = [];
 
     public ?Group $group = null;
@@ -34,6 +42,8 @@ class GroupForm extends Form
         $group = Group::create([
             'name' => $this->name,
             'owner_id' => auth()->id(),
+            'discord_webhook_url' => $this->discordWebHook,
+            'discord_updates' => $this->discordUpdates,
             'owner_feeds_only' => $this->ownerFeedsOnly
         ]);
 
@@ -60,6 +70,8 @@ class GroupForm extends Form
         $this->group = $group;
         $this->name = $this->group->name;
         $this->ownerFeedsOnly = $this->group->owner_feeds_only;
+        $this->discordWebHook = $this->group->discord_webhook_url;
+        $this->discordUpdates = $this->group->discord_updates;
 
         $this->invited_users = $this->group->invites
             ->whereNotIn('status_id', [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT])
@@ -73,7 +85,9 @@ class GroupForm extends Form
 
         $this->group->update([
             'name' => $this->name,
-            'owner_feeds_only' => $this->ownerFeedsOnly
+            'owner_feeds_only' => $this->ownerFeedsOnly,
+            'discord_webhook_url' => $this->discordWebHook,
+            'discord_updates' => $this->discordUpdates,
         ]);
         
         $groupInvites = $this->group->invites()

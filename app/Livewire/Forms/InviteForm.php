@@ -12,12 +12,16 @@ class InviteForm extends Form
 {
     public function update($inviteId, $status)
     {
-        $invite = Invite::where('user_id', auth()->id())->findOrFail($inviteId);
+        $invite = Invite::query()
+            ->where('user_id', auth()->id())
+            ->with('group')
+            ->findOrFail($inviteId);
 
         if (! in_array($status, InviteStatus::getStatuses())) {
             Flux::toast(variant: 'warning', text: "Not a valid action.", duration: 2000);
         }
 
         $invite->update(['status_id' => $status, 'responded_at' => now()]);
+        $invite->group->writeToDiscord(auth()->user()->name . ' has joined the group: ' . $invite->group->name . '.');
     }
 }

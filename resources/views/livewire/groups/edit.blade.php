@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">Edit Group: {{ $this->group->name }}</x-slot>
 
-    <div class="space-y-4">
+    <div class="space-y-8">
         <flux:card>
             <div class="flex space-y-4">
                 <div class="space-y-4">
@@ -15,12 +15,31 @@
                 </div>
             </div>
         </flux:card>
-            
-        <div>
-            <flux:heading>Add users to your group.</flux:heading>
-        </div>
-            
+
         <flux:card>
+            <div class="flex flex-col space-y-4">
+                <flux:checkbox
+                    wire:model.live="form.discordUpdates"
+                    label="Enable discord updates?" 
+                />
+
+                @if ($this->form->discordUpdates)
+                    <flux:input
+                        type="password"
+                        label="Webhook URL"
+                        description="Send feed & suggestion updates to a discord channel of your choice."
+                        wire:model="form.discordWebHook"
+                        viewable
+                    />
+                @endif
+            </div>
+        </flux:card>
+                        
+        <flux:card>
+            <div class="mb-8">
+                <flux:heading>Add users to your group.</flux:heading>
+            </div>
+
             <div class="space-y-4">
                 <div class="flex">
                     <flux:input label="Search" placeholder="Your friend's name.." wire:model.live.debounce.500ms="search" icon-trailing="magnifying-glass" />

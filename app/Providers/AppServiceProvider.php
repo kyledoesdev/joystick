@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Carbon::macro('inUserTimezone', function() {
-            return $this->tz(auth()->user()?->timezone ?? 'American/New_York');
+            return $this->tz(auth()->user()?->timezone ?? 'America/New_York');
         });
 
         Str::macro('possessive', function ($string) {

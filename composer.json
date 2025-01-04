@@ -17,6 +17,7 @@
         "livewire/flux-pro": "^1.1",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
+        "marvinlabs/laravel-discord-logger": "^1.4",
         "socialiteproviders/twitch": "^5.4",
         "staudenmeir/eloquent-has-many-deep": "^1.7"
     },

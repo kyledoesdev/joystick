@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\SocialiteController;
-use App\Http\Controllers\WelcomeController;
 use App\Http\Middleware\GroupMiddleware;
 use App\Livewire\Dashboard;
 use App\Livewire\Feed\Show as Feed;
@@ -11,7 +10,7 @@ use App\Livewire\Invites\Index;
 use App\Livewire\Suggestions\Show as Suggestions;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', WelcomeController::class)->name('welcome');
+Route::view('/', 'login')->name('login');
 
 Route::get('/login/twitch', [SocialiteController::class, 'login'])->name('twitch.login');
 Route::get('/login/twitch/callback', [SocialiteController::class, 'processLogin'])->name('twitch.process_login');
