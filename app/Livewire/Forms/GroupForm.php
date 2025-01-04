@@ -26,7 +26,7 @@ class GroupForm extends Form
     public bool $ownerFeedsOnly = false;
 
     #[Validate('nullable|string|max:255')]
-    public $discordWebHook = '';
+    public $discordWebHook = null;
 
     #[Validate('nullable|boolean')]
     public $discordUpdates = false;
@@ -60,6 +60,8 @@ class GroupForm extends Form
             'responded_at' => now(),
             'status_id' => InviteStatus::ACCEPTED 
         ]);
+
+        $this->reset();
 
         Flux::modal('create-group')->close();
         Flux::toast(variant: 'success', text: 'Group Created - Go Invite your friends!', duration: 3000);

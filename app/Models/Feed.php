@@ -25,7 +25,9 @@ class Feed extends Model
         $user = auth()->check() ? auth()->user()->name : null;
 
         static::creating(function($model) use ($user) {
-            $startTime = $model->start_time != null ? "which has a start time of: {$model->start_time}." : '.';
+            $startTime = isset($model->attributes['start_time']) && $model->attributes['start_time'] != null 
+                ? 'which has a start time of: ' . $model->start_time 
+                : '.';
 
             $model->group->writeToDiscord("{$user} created feed: {$model->name} {$startTime}");
         });
