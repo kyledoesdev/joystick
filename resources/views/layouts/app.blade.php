@@ -23,30 +23,32 @@
             @include('layouts.partials.messages')
 
             @if (isset($header))
-                <div class="flex justify-between">
-                    <div class="w-full sm:w-auto">
-                        <h5 class="text-2xl lg:text-4xl font-bold">
-                            {{ $header }}
-                        </h5>
-
-                        @if (isset($subheader))
-                            <div class="mt-1">
-                                {{ $subheader }}
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between">
+                        <div class="w-full sm:w-auto">
+                            <h5 class="text-2xl lg:text-4xl font-bold">
+                                {{ $header }}
+                            </h5>
+    
+                            @if (isset($subheader))
+                                <div class="mt-1">
+                                    {{ $subheader }}
+                                </div>
+                            @endif
+                        </div>
+    
+                        @if (isset($action))
+                            <div>
+                                {{ $action }}
                             </div>
                         @endif
                     </div>
 
-                    @if (isset($action))
-                        <div>
-                            {{ $action }}
-                        </div>
-                    @endif
-                </div>  
-                
-                <flux:separator />
+                    <flux:separator />
+                </div>
             @endif
 
-            <div class="mt-4">
+            <div>
                 {{ $slot }}
             </div>
         </flux:main>
