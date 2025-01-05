@@ -2,13 +2,9 @@
 
 namespace App\Livewire\Forms;
 
-use App\Livewire\Actions\Group\UnInviteUsers;
-use App\Livewire\Actions\Group\UpdateInvitedUsers;
 use App\Models\Feed;
 use App\Models\Group;
 use App\Models\Invite;
-use App\Models\InviteStatus;
-use Exception;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -30,8 +26,6 @@ class GroupForm extends Form
 
     #[Validate('nullable|boolean')]
     public $discordUpdates = false;
-
-    public array $invited_users = [];
 
     public ?Group $group = null;
 
@@ -74,11 +68,6 @@ class GroupForm extends Form
         $this->ownerFeedsOnly = $this->group->owner_feeds_only;
         $this->discordWebHook = $this->group->discord_webhook_url;
         $this->discordUpdates = $this->group->discord_updates;
-
-        $this->invited_users = $this->group->invites
-            ->whereNotIn('status_id', [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT])
-            ->pluck('user_id')
-            ->toArray();
     }
 
     public function update($group)
@@ -92,13 +81,6 @@ class GroupForm extends Form
             'discord_updates' => $this->discordUpdates,
         ]);
         
-        $groupInvites = $this->group->invites()
-            ->where('status_id', '!=', InviteStatus::DECLINED)
-            ->get();
-        
-        (new UpdateInvitedUsers($this->group, collect($this->invited_users), $groupInvites))->handle();
-        (new UnInviteUsers($this->group, collect($this->invited_users), $groupInvites))->handle();
-
         Flux::toast(variant: 'success', text: 'Group Updated!', duration: 3000);
     }
 

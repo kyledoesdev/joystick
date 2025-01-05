@@ -2,13 +2,14 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Twitch\Provider;
-use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('twitch', Provider::class);
         });
 
+        $this->bootMacros();
+    }
+
+    private function bootMacros(): void
+    {
         Carbon::macro('inUserTimezone', function() {
             return $this->tz(auth()->user()?->timezone ?? 'America/New_York');
         });

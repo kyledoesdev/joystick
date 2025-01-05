@@ -28,7 +28,10 @@ class Dashboard extends Component
                     ->where('user_id', auth()->id());
             })
             ->with('feeds.suggestions.votes')
-            ->withCount(['invites', 'feeds'])
+            ->withCount(['invites' => function($q) {
+                $q->where('status_id', InviteStatus::ACCEPTED);
+            }])
+            ->withCount(['feeds'])
             ->get();
     }
 
