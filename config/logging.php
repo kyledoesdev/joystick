@@ -73,8 +73,6 @@ return [
             'replace_placeholders' => true,
         ],
 
-        'discord' => [/* configured per group */],
-
         'stderr' => [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
@@ -106,6 +104,12 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+
+        'discord' => [/* configured per group */],
+
+        'bugsnag' => [
+            'driver' => 'bugsnag',
         ],
     ],
 ];
