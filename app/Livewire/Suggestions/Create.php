@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Games;
+namespace App\Livewire\Suggestions;
 
-use App\Livewire\Forms\GameForm;
+use App\Livewire\Forms\SuggestionForm;
 use App\Models\Feed;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
@@ -13,13 +13,13 @@ use Livewire\Component;
 class Create extends Component
 {
     public Feed $feed;
-    public GameForm $form;
+    public SuggestionForm $form;
 
     public $searchedGame = null;
 
     public function render()
     {
-        return view('livewire.games.create');
+        return view('livewire.suggestions.create');
     }
 
     #[On('game-searched')]

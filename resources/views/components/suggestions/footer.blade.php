@@ -8,7 +8,7 @@
     </div>
     <div>
         @if ($suggestion->user_id == auth()->id())
-            <livewire:games.edit
+            <livewire:suggestions.edit
                 :suggestion="$suggestion"
                 wire:key="edit-fields-{{ $suggestion->getKey() }}"
             />
