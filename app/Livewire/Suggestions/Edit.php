@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Games;
+namespace App\Livewire\Suggestions;
 
-use App\Livewire\Forms\GameForm;
+use App\Livewire\Forms\SuggestionForm;
 use App\Models\Suggestion;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -11,12 +11,12 @@ use Livewire\Component;
 
 class Edit extends Component
 {
-    public GameForm $form;
+    public SuggestionForm $form;
     public Suggestion $suggestion;
 
     public function render()
     {
-        return view('livewire.games.edit');
+        return view('livewire.suggestions.edit');
     }
 
     public function edit()

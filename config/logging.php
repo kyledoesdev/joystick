@@ -54,7 +54,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => 'single',
+            'channels' => env("APP_ENV") === 'production' ? ['single', 'bugsnag'] : ['single'],
             'ignore_exceptions' => false,
         ],
 

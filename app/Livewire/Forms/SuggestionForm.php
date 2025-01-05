@@ -9,10 +9,10 @@ use Flux\Flux;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class GameForm extends Form
+class SuggestionForm extends Form
 {
     #[Validate('max:24')]
-    public string $gameMode = '';
+    public ?string $gameMode = null;
 
     public function store($feed, $searchedGame)
     {

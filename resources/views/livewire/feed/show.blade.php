@@ -10,7 +10,7 @@
     <flux:card class="my-4">
         <div class="flex justify-between">
             <livewire:suggestions.search />
-            <livewire:games.create :feed="$feed" />
+            <livewire:suggestions.create :feed="$feed" />
         </div>
     </flux:card>
 
