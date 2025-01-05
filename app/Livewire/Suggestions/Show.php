@@ -36,8 +36,9 @@ class Show extends Component
                 'votes as positive_votes_count' => fn($q) => $q->where('vote', Vote::UP_VOTE),
                 'votes as neutral_votes_count' => fn($q) => $q->where('vote', Vote::NEUTRAL),
                 'votes as down_votes_count' => fn($q) => $q->where('vote', Vote::DOWN_VOTE),
+                'votes as all_votes_count'
             ])
-            ->with('user', 'game')
+            ->with('user', 'game', 'votes')
             ->orderBy('positive_votes_count', 'desc')
             ->orderBy('neutral_votes_count', 'desc')
             ->orderBy('down_votes_count', 'desc')
