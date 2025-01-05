@@ -1,6 +1,8 @@
 <div>
     <flux:modal.trigger name="view-votes-{{ $suggestion->getKey() }}">
-        <flux:button variant="primary" size="sm" icon="user-circle" wire:click="$refresh" /> {{-- refresh voters table on click of button --}}
+        <flux:tooltip content="See all votes">
+            <flux:button variant="primary" size="sm" icon="user-circle" wire:click="$refresh" /> {{-- refresh voters table on click of button --}}
+        </flux:tooltip>
     </flux:modal.trigger>
     
     <flux:modal name="view-votes-{{ $suggestion->getKey() }}" class="md:w-1/2 space-y-6">
