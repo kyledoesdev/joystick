@@ -28,5 +28,3 @@ Route::middleware(['auth'])->group(function() {
 
     Route::get('/invites', Index::class)->name('invites');
 });
-
-Route::get('/test_bugsnag', fn() => throw new \Exception('TEST'));
