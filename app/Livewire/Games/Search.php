@@ -31,7 +31,7 @@ class Search extends Component
 
             if (is_null($searchedGame)) {
                 Flux::toast(variant: 'warning', text: "No games found for: $this->phrase.", duration: 2000);
-                $this->phrase = null;
+                $this->phrase = '';
                 return;
             }
 
