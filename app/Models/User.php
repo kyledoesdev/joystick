@@ -31,6 +31,7 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
+        'remember_token',
         'external_token',
         'external_refresh_token',
         'ip_address'

@@ -45,7 +45,7 @@ class SocialiteController extends Controller
 
         Log::warning($user->email . ' just logged in!!');
 
-        Auth::login($user);
+        Auth::login($user, true);
 
         return redirect(route('dashboard'));
     }
