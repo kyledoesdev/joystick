@@ -23,8 +23,7 @@ class Suggestion extends Model
         parent::boot();
 
         static::creating(function($model) {
-            $user = auth()->check() ? auth()->user()->name : null;
-            $model->load('feed', 'feed.group', 'game');
+            $user = auth()->user()->name;
 
             $model->feed->group->writeToDiscord("{$user} added the game suggession: {$model->game->name} to the feed: {$model->feed->name}.");
         });

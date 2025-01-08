@@ -2,9 +2,7 @@
 
 namespace App\Livewire\Forms;
 
-use App\Models\Game;
-use App\Models\Suggestion;
-use Carbon\Carbon;
+use App\Livewire\Actions\Suggestions\StoreSuggestion;
 use Flux\Flux;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -18,18 +16,10 @@ class SuggestionForm extends Form
     {
         $this->validate();
 
-        $game = Game::updateOrCreate([
-            'game_id' => $searchedGame['id']
-        ], [
-            'name' => $searchedGame['name'],
-            'cover' => $searchedGame['box_art_url'],
-        ]);
-
-        Suggestion::create([
-            'feed_id' => $feed->getKey(),
-            'game_id' => $game->getKey(),
-            'user_id' => auth()->id(),
-            'game_mode' => $this->gameMode,
+        (new StoreSuggestion)->handle(auth()->user(), [
+            'feed' => $feed,
+            'game_mode' =>$this->gameMode,
+            'game' => $searchedGame
         ]);
     }
 
@@ -37,16 +27,18 @@ class SuggestionForm extends Form
     {
         $this->validate();
 
-        $suggestion->update([
-            'game_mode' => $this->gameMode,
-        ]);
+        abort_if($suggestion->user_id !== auth()->id(), 403);
 
-        Flux::modal("edit-game-{$suggestion->game->getKey()}")->close();
+        $suggestion->update(['game_mode' => $this->gameMode]);
+
+        Flux::modal("edit-game-{$suggestion->getKey()}")->close();
         Flux::toast(variant: 'success', text: 'Updated Successfully!', duration: 3000);
     }
 
     public function destroy($suggestion)
     {
+        abort_if($suggestion->user_id !== auth()->id(), 403);
+
         $suggestion->votes()->forceDelete();
         $suggestion->forceDelete();
 
