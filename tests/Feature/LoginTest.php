@@ -1,7 +1,6 @@
 <?php
 
 use Laravel\Socialite\Facades\Socialite;
-use Mockery;
 
 it('can load login page', function() {
     $response = $this->get('/');

@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Facades\Http;
 
-class Twitch
+final class Twitch
 {
     public function __construct(private User $user)
     {
