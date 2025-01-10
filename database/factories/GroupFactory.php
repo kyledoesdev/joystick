@@ -16,11 +16,18 @@ class GroupFactory extends Factory
     {
         return [
             'owner_id' => User::factory()->create(),
-            'name' => 'Royalty',
+            'name' => fake()->catchPhrase(),
             'discord_webhook_url' => null,
             'discord_updates' => false,
             'owner_feeds_only' => false,
         ];
+    }
+
+    public function withOwner(User $owner): self
+    {
+        return $this->state([
+            'owner_id' => $owner->getKey(),
+        ]);
     }
 
     public function configure()
@@ -29,7 +36,7 @@ class GroupFactory extends Factory
             Invite::factory()->create([
                 'group_id' => $group->getKey(),
                 'user_id' => $group->owner_id,
-                'status_id' => InviteStatus::where('name', 'accepted')->first()->getKey(),
+                'status_id' => InviteStatus::ACCEPTED,
             ]);
             
             Feed::factory()->create([

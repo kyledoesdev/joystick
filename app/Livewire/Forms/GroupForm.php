@@ -2,13 +2,9 @@
 
 namespace App\Livewire\Forms;
 
-use App\Models\Feed;
+use App\Livewire\Actions\Groups\StoreGroup;
 use App\Models\Group;
-use App\Models\Invite;
-use App\Models\InviteStatus;
 use Flux\Flux;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -34,26 +30,11 @@ class GroupForm extends Form
     {
         $this->validate();
 
-        $group = Group::create([
+        (new StoreGroup)->handle(auth()->user(), [
             'name' => $this->name,
-            'owner_id' => auth()->id(),
             'discord_webhook_url' => $this->discordWebHook,
             'discord_updates' => $this->discordUpdates,
             'owner_feeds_only' => $this->ownerFeedsOnly
-        ]);
-
-        /* Auto create a game backlog feed */
-        $group->feeds()->create([
-            'user_id' => auth()->id(),
-            'name' => Str::possessive($group->name) . ' Game Backlog'
-        ]);
-
-        /* auto create the accepted invite for the group owner */
-        $group->invites()->create([
-            'user_id' => auth()->id(),
-            'invited_at' => now(),
-            'responded_at' => now(),
-            'status_id' => InviteStatus::ACCEPTED 
         ]);
 
         $this->reset();
@@ -94,6 +75,8 @@ class GroupForm extends Form
 
     public function destroy()
     {
+        abort_if($this->group->owner_id != auth()->id(), 403);
+
         $this->group->delete();
 
         Flux::modal('destroy-group')->close();

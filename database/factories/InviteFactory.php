@@ -12,9 +12,9 @@ class InviteFactory extends Factory
     public function definition()
     {
         return [
-            'group_id' => Group::factory(), // Creates a new Group
-            'user_id' => User::factory(),  // Creates a new User
-            'status_id' => InviteStatus::where('name', 'accepted')->first()->getKey(),
+            'group_id' => Group::factory(),
+            'user_id' => User::factory(),
+            'status_id' => InviteStatus::ACCEPTED,
             'invited_at' => now()
         ];
     }
