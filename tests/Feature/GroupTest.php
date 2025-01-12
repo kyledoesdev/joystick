@@ -2,6 +2,7 @@
 
 use App\Livewire\Dashboard;
 use App\Livewire\Group\Edit;
+use App\Models\Feed;
 use App\Models\Group;
 use App\Models\InviteStatus;
 use App\Models\User;
@@ -29,7 +30,7 @@ test('user can see their groups', function() {
         ->assertSee($group->name);
 });
 
-test('user can\'t see groups they aren\'t a part of', function() {
+test('user can not see groups they are not a part of', function() {
     $invitedGroup = Group::factory()->withOwner($this->user)->create();
     $nonInvitedGroup = Group::factory()->create();
 
@@ -56,19 +57,19 @@ test('user can create a new group', function() {
     $this->assertDatabaseHas('groups', [
         'name' => 'Foo',
     ]);
+});
 
-    $group = Group::where('name', 'Foo')->where('owner_id', $this->user->getKey())->firstOrFail();
+test('creating a group creates a backlog feed', function() {
+    $group = Group::factory()->withOwner($this->user)->create();
 
-    $this->assertDatabaseHas('invites', [
-        'group_id' => $group->getKey(),
-        'user_id' => $this->user->getKey(),
-        'status_id' => InviteStatus::ACCEPTED,
-    ]);
+    expect(count($group->feeds))->toBe(1);
+    $this->assertStringContainsString('Backlog', $group->feeds->first()->name);
+});
 
-    $this->assertDatabaseHas('feeds', [
-        'group_id' => $group->getKey(),
-        'user_id' => $this->user->getKey()
-    ]);
+test('creating a group accepts invite for owner', function() {
+    $group = Group::factory()->withOwner($this->user)->create();
+    
+    expect(count($group->invites->where('user_id', $this->user->getKey())->where('status_id', InviteStatus::ACCEPTED)))->toBe(1);
 });
 
 test('user can edit group they own', function() {
@@ -78,7 +79,7 @@ test('user can edit group they own', function() {
         'id' => $group->getKey(),
     ]);
 
-    $this->actingAs($this->user)->get(route('group.edit', ['id' => $group->getKey()]))->assertOk();
+    $this->actingAs($this->user)->get(route('group.edit', $group))->assertOk();
 });
 
 test('user can not edit a group they do not own', function() {
@@ -88,7 +89,7 @@ test('user can not edit a group they do not own', function() {
         'id' => $group->getKey(),
     ]);
 
-    $this->actingAs($this->user)->get(route('group.edit', ['id' => $group->getKey()]))->assertForbidden();
+    $this->actingAs($this->user)->get(route('group.edit', $group))->assertForbidden();
 });
 
 test('user can delete a group they own', function() {

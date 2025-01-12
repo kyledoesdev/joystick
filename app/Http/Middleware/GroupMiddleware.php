@@ -13,7 +13,7 @@ class GroupMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $userInGroup = Invite::query()
-            ->where('group_id', request()->groupId)
+            ->where('group_id', request()->route('group')->getKey())
             ->where('user_id', auth()->id())
             ->where('status_id', InviteStatus::ACCEPTED)
             ->exists();

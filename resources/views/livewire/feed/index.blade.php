@@ -34,7 +34,7 @@
 
                 <flux:separator />
 
-                <a class="space-y-2 my-2" href="{{ route('feed', ['groupId' => $group->getKey(), 'feedId' => $feed->getKey()]) }}">
+                <a class="space-y-2 my-2" href="{{ route('feed', ['group' => $group, 'feed' => $feed]) }}">
                     @if ($feed->start_time != null)
                         <div>
                             <flux:badge size="sm">

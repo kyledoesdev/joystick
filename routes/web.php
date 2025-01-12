@@ -19,11 +19,11 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     /* Groups */
-    Route::get('/group/{id}/edit', Edit::class)->name('group.edit');
+    Route::get('/group/{group}/edit', Edit::class)->name('group.edit');
 
     Route::middleware(GroupMiddleware::class)->group(function() {
-        Route::get('/group/{groupId}', Feed::class)->name('group');
-        Route::get('/group/{groupId}/feed/{feedId}', Suggestions::class)->name('feed');
+        Route::get('/group/{group}', Feed::class)->name('group');
+        Route::get('/group/{group}/feed/{feed}', Suggestions::class)->name('feed');
     });
 
     Route::get('/invites', Index::class)->name('invites');

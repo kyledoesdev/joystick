@@ -25,9 +25,9 @@ class Edit extends Component
 
     public ?User $searchedUser = null;
     
-    public function mount()
+    public function mount(Group $group)
     {
-        $this->group = Group::findOrFail(request()->id);
+        $this->group = $group;
 
         abort_if($this->group->owner_id != auth()->id(), 403);
 
