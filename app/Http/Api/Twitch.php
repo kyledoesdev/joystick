@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Facades\Http;
 
-final class Twitch
+class Twitch
 {
     public function __construct(private User $user)
     {
@@ -19,7 +19,7 @@ final class Twitch
         return Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->user->external_token,
             'Content-Type' => 'application/json',
-            'Client-Id' => env('TWITCH_CLIENT_ID'),
+            'Client-Id' => config('services.twitch.client_id'),
         ])->get("https://api.twitch.tv/helix/search/categories", [
             'query' => $phrase,
             'first' => 1
@@ -30,8 +30,8 @@ final class Twitch
     {
         try {
             $response = Http::asForm()->post('https://id.twitch.tv/oauth2/token', [
-                'client_id' => env("TWITCH_CLIENT_ID"),
-                'client_secret' => env("TWITCH_CLIENT_SECRET"),
+                'client_id' => config('services.twitch.client_id'),
+                'client_secret' => config('services.twitch.client_secret'),
                 'refresh_token' => $this->user->external_refresh_token,
                 'grant_type' => 'refresh_token',
             ]);

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Forms;
 
-use App\Livewire\Actions\Groups\StoreGroup;
+use App\Actions\Groups\StoreGroup;
 use App\Models\Group;
 use Flux\Flux;
 use Livewire\Attributes\Computed;

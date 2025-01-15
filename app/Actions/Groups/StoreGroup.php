@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Actions\Groups;
+namespace App\Actions\Groups;
 
 use App\Models\Group;
 use App\Models\InviteStatus;

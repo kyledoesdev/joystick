@@ -14,11 +14,6 @@ class Show extends Component
     public Feed $feed;
     public string $search = '';
 
-    public function mount()
-    {
-        $this->feed = Feed::with('group')->findOrFail(request()->feedId);
-    }
-
     public function render()
     {
         return view('livewire.feed.show');

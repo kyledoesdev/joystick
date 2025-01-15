@@ -18,4 +18,25 @@ class InviteFactory extends Factory
             'invited_at' => now()
         ];
     }
+
+    public function forUser(User $user): self
+    {
+        return $this->state([
+            'user_id' => $user->getKey(),
+        ]);
+    }
+
+    public function forGroup(Group $group): self
+    {
+        return $this->state([
+            'group_id' => $group->getKey(),
+        ]);
+    }
+
+    public function withStatus(int $inviteStatus): self
+    {
+        return $this->state([
+            'status_id' => $inviteStatus,
+        ]);
+    }
 }
