@@ -26,10 +26,6 @@ class Group extends Model
     {
         parent::boot();
 
-        static::created(function($model) {
-            (new DiscordPing)->handle($model, 'Webhook connected successfully!');
-        });
-
         static::updated(function($model) {
             if ($model->isDirty('discord_webhook_url')) {
                 (new DiscordPing)->handle($model, 'Webhook updated successfully!');

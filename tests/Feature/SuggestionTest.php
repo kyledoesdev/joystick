@@ -68,7 +68,8 @@ test('user create a game suggestion with auto up vote', function () {
         ->set('form.gameMode', 'multiplayer')
         ->call('store')
         ->assertOk()
-        ->assertDispatched('game-update');
+        ->assertDispatched('game-update')
+        ->assertSet('form.gameMode', null);
 
     expect(Game::count())->toBe(1);
 
@@ -105,7 +106,8 @@ test('suggestion creator can update their suggestion', function() {
         ->set('form.gameMode', $newGameMode)
         ->call('update')
         ->assertOk()
-        ->assertDispatched('game-update');
+        ->assertDispatched('game-update')
+        ->assertSet('form.gameMode', null);
 
     expect(Suggestion::count())->toBe(1);
 

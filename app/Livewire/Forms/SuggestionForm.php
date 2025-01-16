@@ -21,6 +21,8 @@ class SuggestionForm extends Form
             'game_mode' =>$this->gameMode,
             'game' => $searchedGame
         ]);
+
+        $this->reset();
     }
 
     public function update($suggestion)
@@ -30,6 +32,8 @@ class SuggestionForm extends Form
         abort_if($suggestion->user_id !== auth()->id(), 403);
 
         $suggestion->update(['game_mode' => $this->gameMode]);
+
+        $this->reset();
 
         Flux::modal("edit-game-{$suggestion->getKey()}")->close();
         Flux::toast(variant: 'success', text: 'Updated Successfully!', duration: 3000);
