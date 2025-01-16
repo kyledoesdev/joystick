@@ -2,6 +2,7 @@
 
 namespace App\Actions\Groups;
 
+use App\Actions\DiscordPing;
 use App\Models\Group;
 use App\Models\InviteStatus;
 use App\Models\User;
@@ -34,6 +35,8 @@ final class StoreGroup
                 'responded_at' => now(),
                 'status_id' => InviteStatus::ACCEPTED 
             ]);
+
+            (new DiscordPing)->handle($group, 'Webhook connected successfully!');
         });
     }
 }
