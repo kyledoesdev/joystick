@@ -1,3 +1,5 @@
+[![Tests](https://github.com/kyledoesdev/joystick/actions/workflows/tests.yml/badge.svg)](https://github.com/kyledoesdev/joystick/actions/workflows/tests.yml)
+
 # Joystick Jury 🕹️
 
 Joystick Jury is an app I built for my friends to give us a solution to figuring out what game to pla on our video game night.
