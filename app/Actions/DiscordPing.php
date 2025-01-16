@@ -37,8 +37,6 @@ final class DiscordPing
 
     private function validateWebhookUrl(Group $group): bool
     {
-        return 
-            is_null($group->discord_webhook_url) ||
-            !Str::startsWith($group->discord_webhook_url, 'https://discord.com/api/webhooks/');
+        return is_null($group->discord_webhook_url);
     }
 }
