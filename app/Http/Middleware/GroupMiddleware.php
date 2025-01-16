@@ -12,8 +12,12 @@ class GroupMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
+        $groupId = is_string($request->route('group'))
+            ? $request->route('group')
+            : $request->route('group')->getKey();
+
         $userInGroup = Invite::query()
-            ->where('group_id', request()->groupId)
+            ->where('group_id', $groupId)
             ->where('user_id', auth()->id())
             ->where('status_id', InviteStatus::ACCEPTED)
             ->exists();

@@ -1,4 +1,4 @@
-name: Laravel
+name: Tests
 
 on:
   push:
@@ -46,7 +46,7 @@ jobs:
     - name: Build Front End Assets
       run: npm run build
 
-    - name: Execute tests (Unit and Feature tests) via Pest
+    - name: Run Pest Tests
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite

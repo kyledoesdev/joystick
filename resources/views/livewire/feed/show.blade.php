@@ -2,7 +2,7 @@
     <x-slot name="header">{{ $feed->name }}</x-slot>
     <x-slot name="subheader">{{ $feed->start_time }}</x-slot>
     <x-slot name="action">
-        <flux:button size="sm" href="{{ route('group', ['groupId' => $feed->group->getKey()]) }}" variant="primary">
+        <flux:button size="sm" href="{{ route('group', $feed->group) }}" variant="primary">
             Back
         </flux:button>
     </x-slot>

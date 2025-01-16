@@ -15,11 +15,6 @@ class Show extends Component
     public FeedForm $createForm;
     public FeedForm $editForm;
 
-    public function mount()
-    {
-        $this->group = Group::with('feeds')->findOrFail(request()->groupId);
-    }
-
     public function render()
     {
         return view('livewire.feed.index');

@@ -20,7 +20,7 @@
                     @if ($group->owner_id == auth()->id())
                         <div>
                             <flux:button 
-                                href="{{ route('group.edit', ['id' => $group->getKey()]) }}"
+                                href="{{ route('group.edit', $group) }}"
                                 size="xs"
                                 variant="primary"
                                 icon="user-plus"
@@ -34,7 +34,7 @@
 
                 <flux:separator />
 
-                <a href="{{ route('group', ['groupId' => $group->getKey()]) }}">
+                <a href="{{ route('group', $group) }}">
                     <div class="space-y-2">
                         <div>
                             <flux:badge icon="user-circle" color="lime">Users: {{ $group->invites_count }}</flux:badge>

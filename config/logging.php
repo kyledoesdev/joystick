@@ -106,7 +106,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
-        'discord' => [/* configured per group */],
+        'discord' => [
+            'driver' => 'custom',
+            'via' => \MarvinLabs\DiscordLogger\Logger::class,
+            'level' => 'debug',
+            'url' => env('DISCORD_WEBHOOK_URL', ''),
+        ],
 
         'bugsnag' => [
             'driver' => 'bugsnag',

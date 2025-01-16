@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Actions\DiscordPing;
 use App\Models\Invite;
 use App\Models\InviteStatus;
 use App\Models\User;
@@ -48,7 +49,8 @@ class InviteForm extends Form
         }
 
         $invite->update(['status_id' => $status, 'responded_at' => now()]);
-        $invite->group->writeToDiscord(auth()->user()->name . ' has joined the group: ' . $invite->group->name . '.');
+
+        (new DiscordPing)->handle($invite->group, auth()->user()->name . ' has joined the group: ' . $invite->group->name . '.');
     }
 
     public function destroy($group, $userId)

@@ -16,4 +16,11 @@ class FeedFactory extends Factory
             'name' => 'Backlog',
         ];
     }
+
+    public function withGroupId(int $groupId)
+    {
+        return $this->state([
+            'group_id' => $groupId,
+        ]);
+    }
 }

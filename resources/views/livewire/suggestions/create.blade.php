@@ -5,7 +5,7 @@
 
     <flux:modal name="create-game" variant="flyout" class="space-y-6">
         <div>
-            <flux:heading size="lg">Add a new Game</flux:heading>
+            <flux:heading size="lg">Add a new game</flux:heading>
         </div>
 
         <livewire:games.search />

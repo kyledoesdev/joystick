@@ -3,9 +3,7 @@
 use Laravel\Socialite\Facades\Socialite;
 
 it('can load login page', function() {
-    $response = $this->get('/');
-
-    $response->assertStatus(200);
+    $this->get('/')->assertOk();
 });
 
 it('redirects to twitch to sign in', function() {

@@ -30,6 +30,13 @@ class GroupFactory extends Factory
         ]);
     }
 
+    public function ownerFeedsOnly(bool $ownerFeedsOnly): self
+    {
+        return $this->state([
+            'owner_feeds_only' => $ownerFeedsOnly,
+        ]);
+    }
+
     public function configure()
     {
         return $this->afterCreating(function (Group $group) {

@@ -21,6 +21,8 @@ class FeedForm extends Form
     {
         $this->validate();
 
+        abort_if($group->owner_feeds_only == true && $group->owner_id != auth()->id(), 403);
+
         $group->feeds()->create([
             'user_id' => auth()->id(),
             'name' => $this->name,
@@ -39,6 +41,8 @@ class FeedForm extends Form
     {
         $this->feed = Feed::findOrFail($feedId);
 
+        abort_if($this->feed->user_id != auth()->id(), 403);
+
         $this->name = $this->feed->name;
         $this->startTime = $this->feed->start_time != null
             ? Carbon::parse($this->feed->start_time)->format('Y-m-d\TH:i')
@@ -48,6 +52,8 @@ class FeedForm extends Form
     public function update()
     {
         $this->validate();
+
+        abort_if($this->feed->user_id != auth()->id(), 403);
 
         $this->feed->update([
             'name' => $this->name,
@@ -63,6 +69,8 @@ class FeedForm extends Form
     public function confirm($feedId)
     {
         $this->feed = Feed::findOrFail($feedId);
+
+        abort_if($this->feed->user_id != auth()->id(), 403);
 
         Flux::modal('destroy-feed')->show();
     }

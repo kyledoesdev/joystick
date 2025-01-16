@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Forms;
 
-use App\Livewire\Actions\Suggestions\StoreSuggestion;
+use App\Actions\Suggestions\StoreSuggestion;
 use Flux\Flux;
 use Livewire\Attributes\Validate;
 use Livewire\Form;

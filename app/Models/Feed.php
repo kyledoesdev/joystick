@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\DiscordPing;
 use App\Models\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,11 +30,11 @@ class Feed extends Model
                 ? 'which has a start time of: ' . $model->start_time 
                 : '.';
 
-            $model->group->writeToDiscord("{$user} created feed: {$model->name} {$startTime}");
+            (new DiscordPing)->handle($model->group, "{$user} created feed: {$model->name} {$startTime}");
         });
 
         static::deleted(function($model) use ($user)  {
-            $model->group->writeToDiscord("{$user} deleted feed: {$model->name}.", 'error');
+            (new DiscordPing)->handle($model->group, "{$user} deleted feed: {$model->name}.", 'error');
         });
     }
 

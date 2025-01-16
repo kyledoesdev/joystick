@@ -18,17 +18,6 @@ class Suggestion extends Model
         'game_mode',
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function($model) {
-            $user = auth()->user()->name;
-
-            $model->feed->group->writeToDiscord("{$user} added the game suggession: {$model->game->name} to the feed: {$model->feed->name}.");
-        });
-    }
-
     public function feed(): BelongsTo
     {
         return $this->belongsTo(Feed::class);

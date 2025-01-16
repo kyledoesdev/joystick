@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Livewire\Actions\Suggestions;
+namespace App\Actions\Suggestions;
 
+use App\Actions\DiscordPing;
 use App\Models\Game;
 use App\Models\Suggestion;
 use App\Models\User;
@@ -33,6 +34,8 @@ final class StoreSuggestion
                 'group_id' => $attributes['feed']->group_id,
                 'vote' => Vote::UP_VOTE
             ]);
+
+            (new DiscordPing)->handle($suggestion->feed->group, "{$user->name} added the game suggession: {$game->name} to the feed: {$suggestion->feed->name}.");
         });
     }
 }
