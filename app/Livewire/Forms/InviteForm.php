@@ -2,12 +2,11 @@
 
 namespace App\Livewire\Forms;
 
-use App\Actions\DiscordPing;
+use App\Actions\Invites\StoreInvite;
+use App\Actions\Invites\UpdateInvite;
 use App\Models\Invite;
 use App\Models\InviteStatus;
 use App\Models\User;
-use App\Notifications\GroupInvitationNotification;
-use Illuminate\Support\Facades\Notification;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -17,16 +16,7 @@ class InviteForm extends Form
 
     public function store($group, $userId)
     {
-        $invite = $group->invites()->updateOrCreate([
-            'user_id' => $userId,
-        ], [
-            'status_id' => InviteStatus::PENDING,
-            'invited_at' => now(),
-        ]);
-
-        if ($invite->wasRecentlyCreated) {
-            Notification::send(User::find($userId), new GroupInvitationNotification($group));
-        }
+        (new StoreInvite)->handle(User::find($userId), $group);
     }
 
     public function edit($group)
@@ -37,20 +27,15 @@ class InviteForm extends Form
             ->toArray();
     }
 
-    public function update($inviteId, $status)
+    public function update($invite, $status)
     {
-        $invite = Invite::query()
-            ->where('user_id', auth()->id())
-            ->with('group')
-            ->findOrFail($inviteId);
-
         if (! in_array($status, InviteStatus::getStatuses())) {
             Flux::toast(variant: 'warning', text: "Not a valid action.", duration: 2000);
         }
 
-        $invite->update(['status_id' => $status, 'responded_at' => now()]);
-
-        (new DiscordPing)->handle($invite->group, auth()->user()->name . ' has joined the group: ' . $invite->group->name . '.');
+        (new UpdateInvite)->handle($invite, [
+            'status' => $status
+        ]);
     }
 
     public function destroy($group, $userId)

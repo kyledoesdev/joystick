@@ -6,6 +6,7 @@ use App\Livewire\Forms\GroupForm;
 use App\Models\Group;
 use App\Models\InviteStatus;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Dashboard extends Component
@@ -18,6 +19,7 @@ class Dashboard extends Component
     }
 
     #[Computed]
+    #[On('user-preferences-updated')]
     public function groups()
     {
         /* todo fix & eager load votes hasManyDeep */
@@ -28,6 +30,7 @@ class Dashboard extends Component
                     ->where('user_id', auth()->id());
             })
             ->with('feeds.suggestions.votes')
+            ->with('userPreferences', fn($q) => $q->where('user_id', auth()->id()))
             ->withCount(['invites' => function($q) {
                 $q->where('status_id', InviteStatus::ACCEPTED);
             }])

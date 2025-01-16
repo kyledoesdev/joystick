@@ -40,11 +40,12 @@ class GroupFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Group $group) {
-            Invite::factory()->create([
-                'group_id' => $group->getKey(),
-                'user_id' => $group->owner_id,
-                'status_id' => InviteStatus::ACCEPTED,
-            ]);
+            Invite::factory()
+                ->withStatus(InviteStatus::ACCEPTED)
+                ->create([
+                    'group_id' => $group->getKey(),
+                    'user_id' => $group->owner_id,
+                ]);
             
             Feed::factory()->create([
                 'group_id' => $group->getKey(),

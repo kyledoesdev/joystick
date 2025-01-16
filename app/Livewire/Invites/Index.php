@@ -32,13 +32,11 @@ class Index extends Component
     {
         return Invite::query()
             ->select([
+                'invites.*',
                 'groups.id as group_id',
                 'groups.name as group_name',
                 'owners.avatar as owner_avatar',
                 'owners.name as owner_name',
-                'invites.id as invite_id',
-                'invites.invited_at',
-                'invites.status_id',
             ])
             ->join('groups', 'invites.group_id', '=', 'groups.id')
             ->join('users as owners', 'groups.owner_id', '=', 'owners.id')
