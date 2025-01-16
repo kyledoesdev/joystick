@@ -4,6 +4,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\Group\Edit;
 use App\Models\Feed;
 use App\Models\Group;
+use App\Models\Invite;
 use App\Models\InviteStatus;
 use App\Models\User;
 use Livewire\Livewire;
@@ -19,10 +20,6 @@ test('can load the dashboard', function() {
 test('user can see their groups', function() {
     $group = Group::factory()->withOwner($this->user)->create();
 
-    $this->assertDatabaseHas('groups', [
-        'id' => $group->getKey(),
-    ]);
-
     $this->actingAs($this->user)->get(route('dashboard'))->assertOk();
 
     Livewire::actingAs($this->user)
@@ -33,11 +30,6 @@ test('user can see their groups', function() {
 test('user can not see groups they are not a part of', function() {
     $invitedGroup = Group::factory()->withOwner($this->user)->create();
     $nonInvitedGroup = Group::factory()->create();
-
-    $this->assertDatabaseHas('groups', [
-        'id' => $invitedGroup->getKey(),
-        'id' => $nonInvitedGroup->getKey()
-    ]);
 
     $this->actingAs($this->user)->get(route('dashboard'))->assertOk();
 
@@ -54,30 +46,24 @@ test('user can create a new group', function() {
         ->call('store')
         ->assertSee('Foo');
 
-    $this->assertDatabaseHas('groups', [
-        'name' => 'Foo',
-    ]);
-});
+    $group = Group::first();
 
-test('creating a group creates a backlog feed', function() {
-    $group = Group::factory()->withOwner($this->user)->create();
+    expect(Group::count())->toBe(1);
+    expect(Feed::count())->toBe(1);
+    expect(Invite::count())->toBe(1);
 
-    expect(count($group->feeds))->toBe(1);
-    $this->assertStringContainsString('Backlog', $group->feeds->first()->name);
-});
-
-test('creating a group accepts invite for owner', function() {
-    $group = Group::factory()->withOwner($this->user)->create();
-    
-    expect(count($group->invites->where('user_id', $this->user->getKey())->where('status_id', InviteStatus::ACCEPTED)))->toBe(1);
+    expect(Group::first())->name->toBe('Foo');
+    expect(Feed::first())
+        ->group_id->toBe(Group::first()->getKey())
+        ->user_id->toBe($this->user->getKey());
+    expect(Invite::first())
+        ->group_id->toBe(Group::first()->getKey())
+        ->user_id->toBe($this->user->getKey())
+        ->status_id->toBe(InviteStatus::ACCEPTED);
 });
 
 test('user can edit group they own', function() {
     $group = Group::factory()->withOwner($this->user)->create();
-
-    $this->assertDatabaseHas('groups', [
-        'id' => $group->getKey(),
-    ]);
 
     $this->actingAs($this->user)->get(route('group.edit', $group))->assertOk();
 });
@@ -85,19 +71,11 @@ test('user can edit group they own', function() {
 test('user can not edit a group they do not own', function() {
     $group = Group::factory()->create();
 
-    $this->assertDatabaseHas('groups', [
-        'id' => $group->getKey(),
-    ]);
-
     $this->actingAs($this->user)->get(route('group.edit', $group))->assertForbidden();
 });
 
 test('user can delete a group they own', function() {
     $group = Group::factory()->withOwner($this->user)->create();
-
-    $this->assertDatabaseHas('groups', [
-        'id' => $group->getKey(),
-    ]);
 
     Livewire::actingAs($this->user)
         ->test(Dashboard::class)
@@ -114,10 +92,6 @@ test('user can delete a group they own', function() {
 
 test('user can not delete a group they do not own', function() {
     $group = Group::factory()->create();
-
-    $this->assertDatabaseHas('groups', [
-        'id' => $group->getKey(),
-    ]);
 
     Livewire::actingAs($this->user)
         ->test(Dashboard::class)

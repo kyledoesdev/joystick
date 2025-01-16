@@ -28,9 +28,9 @@ test('can load feeds page for a group member who has accepted their invitation',
 });
 
 test('can not load feeds page for a user not invited to the group', function() {
-    $notInvitedUser = User::factory()->create();
-
-    $this->actingAs($notInvitedUser)->get(route('group', ['group' => $this->group]))->assertForbidden();
+    $this->actingAs(User::factory()->create())
+        ->get(route('group', ['group' => $this->group]))
+        ->assertForbidden();
 });
 
 test('group owner can create a new feed', function() {

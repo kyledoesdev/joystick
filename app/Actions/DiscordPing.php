@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use MarvinLabs\DiscordLogger\Discord\Exceptions\MessageCouldNotBeSent;
-use MarvinLabs\DiscordLogger\Logger;
 
 final class DiscordPing
 {
@@ -21,9 +20,6 @@ final class DiscordPing
 
         try {
             config(['logging.channels.discord' => [
-                'driver' => 'custom',
-                'via' => Logger::class,
-                'level' => 'info',
                 'url' => $group->discord_webhook_url,
             ]]);
 
