@@ -23,7 +23,7 @@
                     <flux:heading class="mt-1">{{ $group->name }}</flux:heading>
 
                     <div class="flex space-x-2">
-                        <livewire:group.preference :group="$group" />
+                        <livewire:group.preference :preference="$preference" />
 
                         @if ($group->owner_id == auth()->id())
                             <flux:button 

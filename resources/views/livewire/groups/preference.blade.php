@@ -1,12 +1,12 @@
 <div>
-    <flux:modal.trigger name="edit-group-prefs-{{ $group->getKey() }}">
+    <flux:modal.trigger name="edit-prefs-{{ $preference->getKey() }}">
         <flux:button variant="primary" size="xs" icon="wrench-screwdriver"></flux:button>
     </flux:modal.trigger>
 
-    <flux:modal name="edit-group-prefs-{{ $group->getKey() }}" class="md:w-1/2 space-y-6">
+    <flux:modal name="edit-prefs-{{ $preference->getKey() }}" class="md:w-1/2 space-y-6">
         <div>
             <flux:heading size="lg">Update Preferences</flux:heading>
-            <flux:subheading>Update your preferences for {{ $group->name }}</flux:subheading>
+            <flux:subheading>Update your preferences for {{ $preference->group->name }}</flux:subheading>
         </div>
 
         <flux:separator class="my-4" />

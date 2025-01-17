@@ -3,18 +3,18 @@
 namespace App\Livewire\Group;
 
 use App\Livewire\Forms\UserGroupPreferenceForm;
-use App\Models\Group;
+use App\Models\UserGroupPreference;
 use Flux\Flux;
 use Livewire\Component;
 
 class Preference extends Component
 {
-    public Group $group;
+    public UserGroupPreference $preference;
     public UserGroupPreferenceForm $form;
 
     public function mount()
-    {   
-        $this->form->color = $this->group->userPreferences->where('user_id', auth()->id())->first()->color;
+    {
+        $this->form->color = $this->preference->color;
     }
 
     public function render()
@@ -24,7 +24,7 @@ class Preference extends Component
 
     public function update()
     {
-        $this->form->update($this->group);
+        $this->form->update($this->preference);
 
         $this->dispatch('user-preferences-updated');
 
@@ -34,7 +34,7 @@ class Preference extends Component
     public function resetColor()
     {
         $this->form->color = null;
-        $this->form->update($this->group);
+        $this->form->update($this->preference);
 
         $this->dispatch('user-preferences-updated');
     }

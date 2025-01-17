@@ -22,7 +22,7 @@ final class StoreInvite
             ]);
 
             if ($invite->wasRecentlyCreated) {
-                Notification::send(User::find($userId), new GroupInvitationNotification($group));
+                Notification::send($user, new GroupInvitationNotification($group));
             }
         });
     }
