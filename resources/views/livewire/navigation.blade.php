@@ -1,6 +1,6 @@
 <?php
 
-use App\LivewireLogout;
+use App\Livewire\Logout;
 use Livewire\Volt\Component;
 
 new class extends Component
