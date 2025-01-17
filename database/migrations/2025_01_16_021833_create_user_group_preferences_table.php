@@ -26,11 +26,15 @@ return new class extends Migration
             $invites = $group->invites()->where('status_id', InviteStatus::ACCEPTED)->get();
 
             foreach ($invites as $invite) {
-                $group->userPreferences()->create([
+                $group->userPreferences()->updateOrcreate([
                     'user_id' => $invite->user_id
+                ], [
+                    'color' => null
                 ]);
 
                 Log::channel('debug_discord')->info("created preference record for: {$invite->user->name} for {$group->name}.");
+
+                sleep(5);
             }
         }
     }
