@@ -11,19 +11,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('user_group_preferences', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('group_id')->constrained()->onDelete('cascade');
-            $table->string('color')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        if (!Schema::hasTable('user_group_preferences')) {
+            Schema::create('user_group_preferences', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->foreignId('group_id')->constrained()->onDelete('cascade');
+                $table->string('color')->nullable();
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
 
         foreach(Group::all() as $group) {
             $invites = $group->invites()->where('status_id', InviteStatus::ACCEPTED)->get();
 
-            foreach ($invite as $invite) {
+            foreach ($invites as $invite) {
                 $group->userPreferences()->create([
                     'user_id' => $invite->user_id
                 ]);
