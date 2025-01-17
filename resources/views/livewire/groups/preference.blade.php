@@ -19,7 +19,7 @@
                 wire:model="form.color"
             />
 
-            <flux:button size="sm" icon="x-mark" wire:click="resetColor" />
+            <flux:button size="xs" icon="arrow-path" wire:click="resetColor">Reset</flux:button>
         </div>
 
         <flux:separator />
