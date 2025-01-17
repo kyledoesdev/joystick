@@ -37,6 +37,13 @@ class InviteFactory extends Factory
     {
         return $this->state([
             'status_id' => $inviteStatus,
-        ]);
+        ])->afterCreating(function ($invite) use ($inviteStatus) {
+            if ($inviteStatus === InviteStatus::ACCEPTED) {
+                $invite->group->userPreferences()->create([
+                    'user_id' => $invite->user_id,
+                    'color' => '#FFFFFF'
+                ]);
+            }
+        });;
     }
 }

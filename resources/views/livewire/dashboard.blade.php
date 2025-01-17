@@ -13,12 +13,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @endif
 
-            <flux:card class="flex flex-col space-y-2 my-2">
+            @php
+                $preference = $group->userPreferences->where('user_id', auth()->id())->first();
+                $color = $preference->color ?? '';
+            @endphp
+
+            <flux:card class="flex flex-col space-y-2 my-2" style="background-color: {{ $color }};">
                 <div class="flex justify-between">
                     <flux:heading class="mt-1">{{ $group->name }}</flux:heading>
 
-                    @if ($group->owner_id == auth()->id())
-                        <div>
+                    <div class="flex space-x-2">
+                        <livewire:group.preference :preference="$preference" />
+
+                        @if ($group->owner_id == auth()->id())
                             <flux:button 
                                 href="{{ route('group.edit', $group) }}"
                                 size="xs"
@@ -26,10 +33,10 @@
                                 icon="user-plus"
                             />
                             <flux:button size="xs" variant="danger" icon="trash" wire:click="confirm({{ $group->getKey() }})" />
-                        </div>
-                    @else
-                        leave group
-                    @endif
+                        @else
+                            leave group
+                        @endif
+                    </div>
                 </div>
 
                 <flux:separator />

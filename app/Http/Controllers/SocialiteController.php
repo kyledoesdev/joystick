@@ -18,8 +18,6 @@ class SocialiteController extends Controller
     {
         $user = Socialite::driver('twitch')->stateless()->user();
 
-        Log::warning("{$user->email} has logged in.");
-
         $deletedUser = User::withTrashed()
             ->where('external_id', $user->id)
             ->whereNotNull('deleted_at')
@@ -43,7 +41,7 @@ class SocialiteController extends Controller
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
         ]);
 
-        Log::warning($user->email . ' just logged in!!');
+        Log::channel('debug_discord')->warning($user->email . ' just logged in!!');
 
         Auth::login($user, true);
 

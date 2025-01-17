@@ -23,7 +23,7 @@ new class extends Component
 
     <flux:navbar class="-mb-px max-lg:hidden">
         @auth
-            <flux:navbar.item icon="adjustments-horizontal" href="{{ route('dashboard') }}" :current="request()->is('dashboard')">
+            <flux:navbar.item icon="users" href="{{ route('dashboard') }}" :current="request()->is('dashboard')">
                 Groups
             </flux:navbar.item>
 

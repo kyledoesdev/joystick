@@ -110,7 +110,14 @@ return [
             'driver' => 'custom',
             'via' => \MarvinLabs\DiscordLogger\Logger::class,
             'level' => 'debug',
-            'url' => env('DISCORD_WEBHOOK_URL', ''),
+            'url' => env('_', ''),
+        ],
+
+        'debug_discord' => [
+            'driver' => 'custom',
+            'via' => \MarvinLabs\DiscordLogger\Logger::class,
+            'level' => 'debug',
+            'url' => env('DEBUG_DISCORD_WEBHOOK')
         ],
 
         'bugsnag' => [

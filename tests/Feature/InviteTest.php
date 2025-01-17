@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Invite;
 use App\Models\InviteStatus;
 use App\Models\User;
+use App\Models\UserGroupPreference;
 use Livewire\Livewire;
 
 beforeEach(function() {
@@ -70,6 +71,8 @@ test('user can accept an invite', function() {
     $this->invite->refresh();
 
     expect($this->invite->status_id)->toBe(InviteStatus::ACCEPTED);
+    expect(UserGroupPreference::count())->toBe(2); /* 1 for the owner of the group, and one for this invited user */
+    expect(UserGroupPreference::where('user_id', $this->user->getKey())->exists())->toBeTrue();
 });
 
 test('user can decline an invite', function() {

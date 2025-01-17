@@ -28,10 +28,10 @@
 
                         <flux:cell>
                             <flux:button size="xs" variant="primary" icon="check" 
-                                wire:click="update({{ $invite->invite_id }}, '{{ App\Models\InviteStatus::ACCEPTED }}')" 
+                                wire:click="update({{ $invite->getKey() }}, '{{ App\Models\InviteStatus::ACCEPTED }}')" 
                             />
                             <flux:button size="xs" variant="danger" icon="x-mark"
-                                wire:click="update({{ $invite->invite_id }}, '{{ App\Models\InviteStatus::ACCEPTED }}')"
+                                wire:click="update({{ $invite->getKey() }}, '{{ App\Models\InviteStatus::DECLINED }}')"
                             />
                         </flux:cell>
                     </flux:row>

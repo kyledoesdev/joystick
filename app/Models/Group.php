@@ -60,6 +60,11 @@ class Group extends Model
         return $this->hasMany(Invite::class);
     }
 
+    public function userPreferences(): HasMany
+    {
+        return $this->hasMany(UserGroupPreference::class);
+    }
+
     public function suggestions(): HasManyThrough
     {
         return $this->hasManyThrough(Suggestion::class, Feed::class);

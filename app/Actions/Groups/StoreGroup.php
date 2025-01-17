@@ -36,6 +36,11 @@ final class StoreGroup
                 'status_id' => InviteStatus::ACCEPTED 
             ]);
 
+            /* Create group preferences for the owner */
+            $group->userPreferences()->create([
+                'user_id' => $user->getKey()
+            ]);
+
             (new DiscordPing)->handle($group, 'Webhook connected successfully!');
         });
     }
