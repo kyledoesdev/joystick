@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo(fn (Request $request) => route('login'));
     })
+    ->withCommands([
+        App\Console\Commands\CreateAction::class
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
