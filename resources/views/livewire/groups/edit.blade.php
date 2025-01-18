@@ -144,7 +144,7 @@
         <div class="flex">
             <flux:spacer />
 
-            <flux:button type="submit" variant="danger" size="xs" wire:click="destroy">Delete</flux:button>
+            <flux:button type="submit" variant="danger" size="xs" wire:click="destroyGroup">Delete</flux:button>
         </div>
     </flux:modal>
 </div>
