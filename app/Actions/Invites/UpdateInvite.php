@@ -32,24 +32,6 @@ final class UpdateInvite
                 in_array($attributes['status'], [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT]) ? 'error' : 'info'
             );
         });
-
-        /* delete feeds, suggestions & votes for the user if they were removed or left the group */
-        DB::transaction(function() use ($invite, $attributes) {
-            if (in_array($attributes['status'], [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT])) {
-                $feeds = $invite->group->feeds()->where('user_id', $invite->user_id)->get();
-
-                $feeds->each(function($feed) use ($invite) {
-                    $feed->suggestions()
-                        ->where('user_id', $invite->user_id)
-                        ->each(function ($suggestion) use ($invite) {
-                            $suggestion->votes()->where('user_id', $invite->user_id)->delete();
-                            $suggestion->delete();
-                        });
-                    
-                    $feed->delete();
-                });
-            }
-        });
     }
 
     private function getActionString(int $status): string
