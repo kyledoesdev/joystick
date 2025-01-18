@@ -7,12 +7,13 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use MarvinLabs\DiscordLogger\Discord\Exceptions\MessageCouldNotBeSent;
+use MarvinLabs\DiscordLogger\Logger;
 
 final class DiscordPing
 {
     public function handle(Group $group, string $message, string $level = 'info'): void
     {
-        if (! $this->validateWebhookUrl($group)) {
+        if ($this->isNotValidWebHook($group)) {
             return;
         }
 
@@ -20,11 +21,14 @@ final class DiscordPing
 
         try {
             config(['logging.channels.discord' => [
+                'driver' => 'custom',
+                'via' => Logger::class,
+                'level' => 'info',
                 'url' => $group->discord_webhook_url,
             ]]);
 
             Log::channel('discord')->{$level}($message);
-            Log::info($message);
+            Log::channel('single')->info($message);
         } catch (MessageCouldNotBeSent $e) {
             Log::warning('Invalid Discord webhook URL provided.');
         } catch (Exception $e) {
@@ -35,7 +39,7 @@ final class DiscordPing
         }
     }
 
-    private function validateWebhookUrl(Group $group): bool
+    private function isNotValidWebHook(Group $group): bool
     {
         return is_null($group->discord_webhook_url);
     }

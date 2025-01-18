@@ -1,12 +1,16 @@
 <?php
 
+use App\Livewire\Dashboard;
 use App\Livewire\Invites\Index;
 use App\Livewire\Invites\NavigationBadge;
+use App\Models\Feed;
 use App\Models\Group;
 use App\Models\Invite;
 use App\Models\InviteStatus;
+use App\Models\Suggestion;
 use App\Models\User;
 use App\Models\UserGroupPreference;
+use App\Models\Vote;
 use Livewire\Livewire;
 
 beforeEach(function() {
@@ -85,4 +89,43 @@ test('user can decline an invite', function() {
     $this->invite->refresh();
 
     expect($this->invite->status_id)->toBe(InviteStatus::DECLINED);
+});
+
+test('user can leave a group and it removes their feeds, suggestions and votes', function() {
+    $this->invite->update(['status_id' => InviteStatus::ACCEPTED]);
+
+    $this->invite->group->userPreferences()->create([
+        'user_id' => $this->user->getKey()
+    ]);
+
+    $feed = Feed::factory()->withGroupId($this->group->getKey())->forOwner($this->user)->create();
+    $suggestion = Suggestion::factory()->forFeed($feed)->forUser($this->user)->create();
+
+    Livewire::actingAs($this->user)
+        ->test(Dashboard::class)
+        ->assertOk()
+        ->call('confirmLeaveGroup', $this->group->getKey())
+        ->assertSet('inviteForm.invite.id', $this->invite->getKey())
+        ->assertOk()
+        ->call('leaveGroup', $this->invite->getKey())
+        ->assertOk();
+
+    expect($this->invite->fresh()->status_id)->toBe(InviteStatus::USER_LEFT);
+    expect($this->group->feeds()->where('user_id', $this->user->getKey())->count())->toBe(0);
+    expect(Suggestion::count())->toBe(0);
+    expect(Vote::count())->toBe(0);
+});
+
+test('user can not leave a group they are not in', function() {
+    $this->invite->update(['status_id' => InviteStatus::ACCEPTED]);
+
+    $this->invite->group->userPreferences()->create([
+        'user_id' => $this->user->getKey()
+    ]);
+
+    Livewire::actingAs($this->user)
+        ->test(Dashboard::class)
+        ->assertOk()
+        ->call('confirmLeaveGroup', Group::factory()->create()->getKey())
+        ->assertForbidden();
 });

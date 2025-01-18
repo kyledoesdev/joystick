@@ -22,19 +22,13 @@
                 <div class="flex justify-between">
                     <flux:heading class="mt-1">{{ $group->name }}</flux:heading>
 
-                    <div class="flex space-x-2">
+                    <div class="flex">
                         <livewire:group.preference :key="$preference->getKey()" :preference="$preference" />
 
-                        @if ($group->owner_id == auth()->id())
-                            <flux:button 
-                                href="{{ route('group.edit', $group) }}"
-                                size="xs"
-                                variant="primary"
-                                icon="user-plus"
-                            />
-                            <flux:button size="xs" variant="danger" icon="trash" wire:click="confirm({{ $group->getKey() }})" />
-                        @else
-                            leave group
+                        @if ($group->owner_id != auth()->id())
+                            <flux:modal.trigger name="update-group-invite">
+                                <flux:button class="ml-2" size="xs" variant="danger" icon="x-circle" wire:click="confirmLeaveGroup({{ $group->getKey() }})" />
+                            </flux:modal.trigger>
                         @endif
                     </div>
                 </div>
@@ -82,10 +76,10 @@
     
             <div class="flex space-y-4">
                 <div class="space-y-4">
-                    <flux:input label="Group Name" wire:model.live.debounce.500ms="form.name" placeholder="My Group" required />
+                    <flux:input label="Group Name" wire:model.live.debounce.500ms="groupForm.name" placeholder="My Group" required />
                     <flux:separator />
                     <flux:checkbox
-                        wire:model="form.ownerFeedsOnly"
+                        wire:model="groupForm.ownerFeedsOnly"
                         label="Only group owner (you) can create feeds?" 
                         required
                     />
@@ -94,16 +88,16 @@
 
             <div class="flex flex-col space-y-4">
                 <flux:checkbox
-                    wire:model.live="form.discordUpdates"
+                    wire:model.live="groupForm.discordUpdates"
                     label="Enable discord updates?" 
                 />
 
-                @if ($this->form->discordUpdates)
+                @if ($this->groupForm->discordUpdates)
                     <flux:input
                         type="password"
                         label="Webhook URL"
                         description="Send feed & suggestion updates to a discord channel of your choice."
-                        wire:model="form.discordWebHook"
+                        wire:model="groupForm.discordWebHook"
                         viewable
                     />
                 @endif
@@ -117,17 +111,17 @@
         </div>
     </flux:modal>
 
-    {{-- Destroy Confirm Modal --}}
-    <flux:modal name="destroy-group" class="md:w-96 space-y-6">
+    {{-- Leave group Confirm Modal --}}
+    <flux:modal name="update-group-invite" class="md:w-96 space-y-6">
         <div>
-            <flux:heading size="lg">Delete Group: {{ $form->group?->name }}?</flux:heading>
-            <flux:subheading>Are you sure you want to delete this group, it's feeds & all of it's underlying data?</flux:subheading>
+            <flux:heading size="lg">Leave Group {{ $inviteForm?->invite?->group?->name }}?</flux:heading>
+            <flux:subheading>Are you sure you want to leave this group?</flux:subheading>
         </div>
 
         <div class="flex">
             <flux:spacer />
 
-            <flux:button type="submit" variant="danger" size="xs" wire:click="destroy">Delete</flux:button>
+            <flux:button type="submit" variant="danger" size="xs" wire:click="leaveGroup({{ $inviteForm->invite?->getKey() }})">Leave</flux:button>
         </div>
     </flux:modal>
 </div>

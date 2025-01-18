@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Actions\Feeds\DestroyFeed;
 use App\Models\Feed;
 use Carbon\Carbon;
 use Flux\Flux;
@@ -77,7 +78,7 @@ class FeedForm extends Form
 
     public function destroy()
     {
-        $this->feed->delete();
+        (new DestroyFeed)->handle(auth()->user(), $this->feed);
 
         Flux::modal('destroy-feed')->close();
         Flux::toast(variant: 'success', text: 'Feed Deleted!', duration: 3000);

@@ -3,15 +3,18 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\GroupForm;
+use App\Livewire\Forms\InviteForm;
 use App\Models\Group;
 use App\Models\InviteStatus;
+use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Dashboard extends Component
 {
-    public GroupForm $form;
+    public GroupForm $groupForm;
+    public InviteForm $inviteForm;
 
     public function render()
     {
@@ -30,9 +33,11 @@ class Dashboard extends Component
                     ->where('user_id', auth()->id());
             })
             ->with('feeds.suggestions.votes')
-            ->with('userPreferences', fn($q) => $q->where('user_id', auth()->id()))
-            ->withCount(['invites' => function($q) {
-                $q->where('status_id', InviteStatus::ACCEPTED);
+            ->with('userPreferences', function($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->withCount(['invites' => function($query) {
+                $query->where('status_id', InviteStatus::ACCEPTED);
             }])
             ->withCount(['feeds'])
             ->get();
@@ -40,16 +45,18 @@ class Dashboard extends Component
 
     public function store()
     {
-        $this->form->store();
+        $this->groupForm->store();
     }
 
-    public function confirm($groupId)
+    public function confirmLeaveGroup($groupId)
     {
-        $this->form->confirm($groupId);
+        $this->inviteForm->confirm($groupId);
     }
 
-    public function destroy()
+    public function leaveGroup($inviteId)
     {
-        $this->form->destroy();
+        $this->inviteForm->update($inviteId, InviteStatus::USER_LEFT);
+
+        Flux::modal('update-group-invite')->close();
     }
 }

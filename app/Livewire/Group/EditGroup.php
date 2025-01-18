@@ -14,7 +14,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Edit extends Component
+class EditGroup extends Component
 {
     use TableHelpers;
     use WithPagination;
@@ -60,6 +60,20 @@ class Edit extends Component
     public function updateGroup()
     {
         $this->groupForm->update($this->group);
+    }
+
+    public function confirm($groupId)
+    {
+        $this->groupForm->confirm($groupId);
+    }
+
+    public function destroyGroup()
+    {
+        $this->groupForm->destroy();
+        
+        session()->flash('success', 'You have successfully deleted the group.');
+
+        $this->redirectRoute('dashboard');
     }
 
     public function updatedSearch($value)

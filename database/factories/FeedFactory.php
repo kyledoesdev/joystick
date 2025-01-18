@@ -13,8 +13,15 @@ class FeedFactory extends Factory
         return [
             'group_id' => Group::factory(),
             'user_id' => User::factory(),
-            'name' => 'Backlog',
+            'name' => fake()->catchPhrase(),
         ];
+    }
+
+    public function forOwner(User $user)
+    {
+        return $this->state([
+            'user_id' => $user->getKey()
+        ]);
     }
 
     public function withGroupId(int $groupId)

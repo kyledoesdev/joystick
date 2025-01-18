@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Feed;
+namespace App\Livewire\Group;
 
 use App\Livewire\Forms\FeedForm;
 use App\Models\Feed;
@@ -8,7 +8,7 @@ use App\Models\Group;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
-class Show extends Component
+class ShowGroup extends Component
 {
     public Group $group;
 
@@ -17,7 +17,7 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.feed.index');
+        return view('livewire.groups.show');
     }
 
     #[Computed]

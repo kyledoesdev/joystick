@@ -7,9 +7,14 @@
                 </h5>
             </div>
     
-            <flux:button variant="primary" size="sm" wire:click="updateGroup">
-                Update Group
-            </flux:button>
+            <div class="flex space-x-2">
+                <flux:button variant="primary" size="sm" wire:click="updateGroup">
+                    Update Group
+                </flux:button>
+                <flux:button size="sm" variant="danger" icon-trailing="trash" wire:click="confirm({{ $group->getKey() }})">
+                    Delete Group
+                </flux:button>
+            </div>
         </div>
     
         <flux:separator class="mb-4" />
@@ -126,6 +131,20 @@
             @elseif ($search != '' && is_null($searchedUser))
                 <flux:badge>No results for a user named: {{ $search }}</flux:badge>
             @endif
+        </div>
+    </flux:modal>
+
+    {{-- Destroy Confirm Modal --}}
+    <flux:modal name="destroy-group" class="md:w-96 space-y-6">
+        <div>
+            <flux:heading size="lg">Delete Group: {{ $groupForm->group?->name }}?</flux:heading>
+            <flux:subheading>Are you sure you want to delete this group, it's feeds & all of it's underlying data?</flux:subheading>
+        </div>
+
+        <div class="flex">
+            <flux:spacer />
+
+            <flux:button type="submit" variant="danger" size="xs" wire:click="destroy">Delete</flux:button>
         </div>
     </flux:modal>
 </div>

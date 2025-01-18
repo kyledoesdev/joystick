@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Feed extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'group_id',
         'user_id',
@@ -31,10 +34,6 @@ class Feed extends Model
                 : '.';
 
             (new DiscordPing)->handle($model->group, "{$user} created feed: {$model->name} {$startTime}");
-        });
-
-        static::deleted(function($model) use ($user)  {
-            (new DiscordPing)->handle($model->group, "{$user} deleted feed: {$model->name}.", 'error');
         });
     }
 
