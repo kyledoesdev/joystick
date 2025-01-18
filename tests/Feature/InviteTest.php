@@ -91,12 +91,15 @@ test('user can decline an invite', function() {
     expect($this->invite->status_id)->toBe(InviteStatus::DECLINED);
 });
 
-test('user can leave a group', function() {
+test('user can leave a group and it removes their votes', function() {
     $this->invite->update(['status_id' => InviteStatus::ACCEPTED]);
 
     $this->invite->group->userPreferences()->create([
         'user_id' => $this->user->getKey()
     ]);
+
+    $feed = Feed::factory()->withGroupId($this->group->getKey())->forOwner($this->user)->create();
+    $suggestion = Suggestion::factory()->forFeed($feed)->forUser($this->user)->create();
 
     Livewire::actingAs($this->user)
         ->test(Dashboard::class)
@@ -106,6 +109,8 @@ test('user can leave a group', function() {
         ->assertOk()
         ->call('leaveGroup', $this->invite->getKey())
         ->assertOk();
+
+    expect(Vote::count())->toBe(0);
 });
 
 test('user can not leave a group they are not in', function() {
