@@ -4,15 +4,19 @@ namespace App\Livewire\Forms;
 
 use App\Actions\Invites\StoreInvite;
 use App\Actions\Invites\UpdateInvite;
+use App\Models\Group;
 use App\Models\Invite;
 use App\Models\InviteStatus;
 use App\Models\User;
+use Flux\Flux;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class InviteForm extends Form
 {
     public array $invited_users = [];
+
+    public ?Invite $invite = null;
 
     public function store($group, $userId)
     {
@@ -22,7 +26,6 @@ class InviteForm extends Form
     public function edit($group)
     {
         $this->invited_users = $group->invites
-            ->whereNotIn('status_id', [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT])
             ->pluck('user_id')
             ->toArray();
     }
@@ -36,6 +39,17 @@ class InviteForm extends Form
         (new UpdateInvite)->handle($invite, [
             'status' => $status
         ]);
+    }
+
+    public function confirm($groupId)
+    {
+        $group = Group::with('invites')->findOrFail($groupId);
+
+        $this->invite = $group->invites->firstWhere('user_id', auth()->id());
+
+        abort_if(is_null($this->invite), 403);
+
+        Flux::modal('update-group-invite')->show();
     }
 
     public function destroy($group, $userId)

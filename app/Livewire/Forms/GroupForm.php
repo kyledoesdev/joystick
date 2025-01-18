@@ -78,8 +78,5 @@ class GroupForm extends Form
         abort_if($this->group->owner_id != auth()->id(), 403);
 
         $this->group->delete();
-
-        Flux::modal('destroy-group')->close();
-        Flux::toast(variant: 'success', text: 'Group Deleted!', duration: 3000);
     }
 }

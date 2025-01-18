@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Dashboard;
-use App\Livewire\Group\Edit;
+use App\Livewire\Group\EditGroup;
 use App\Models\Feed;
 use App\Models\Group;
 use App\Models\Invite;
@@ -42,7 +42,7 @@ test('user can not see groups they are not a part of', function() {
 test('user can create a new group', function() {
     Livewire::actingAs($this->user)
         ->test(Dashboard::class)
-        ->set('form.name', 'Foo')
+        ->set('groupForm.name', 'Foo')
         ->call('store')
         ->assertSee('Foo');
 
@@ -76,29 +76,23 @@ test('user can not edit a group they do not own', function() {
 
 test('user can delete a group they own', function() {
     $group = Group::factory()->withOwner($this->user)->create();
-
+    
     Livewire::actingAs($this->user)
-        ->test(Dashboard::class)
+        ->test(EditGroup::class, ['group' => $group])
         ->call('confirm', $group->getKey())
-        ->assertSet('form.group.id', $group->getKey())
-        ->assertSee("Delete Group: {$group->name}")
-        ->call('destroy');
+        ->call('destroyGroup')
+        ->assertRedirect(route('dashboard'));
 
-    $this->assertDatabaseHas('groups', [
+    $this->assertSoftDeleted('groups', [
         'id' => $group->getKey(),
-        'deleted_at' => now(),
     ]);
 });
 
 test('user can not delete a group they do not own', function() {
-    $group = Group::factory()->create();
+    $group = Group::factory()->create(); /* owner is different than $this->user */
 
     Livewire::actingAs($this->user)
-        ->test(Dashboard::class)
-        ->call('confirm', $group->getKey())
-        ->assertSet('form.group.id', $group->getKey())
-        ->assertSee("Delete Group: {$group->name}")
-        ->call('destroy')
+        ->test(EditGroup::class, ['group' => $group])
         ->assertForbidden();
 
     $this->assertDatabaseHas('groups', [

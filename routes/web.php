@@ -3,8 +3,8 @@
 use App\Http\Controllers\SocialiteController;
 use App\Http\Middleware\GroupMiddleware;
 use App\Livewire\Dashboard;
-use App\Livewire\Feed\Show as Feed;
-use App\Livewire\Group\Edit;
+use App\Livewire\Group\ShowGroup;
+use App\Livewire\Group\EditGroup;
 use App\Livewire\Group\GroupFeeds;
 use App\Livewire\Invites\Index;
 use App\Livewire\Suggestions\Show as Suggestions;
@@ -19,10 +19,10 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     /* Groups */
-    Route::get('/group/{group}/edit', Edit::class)->name('group.edit');
+    Route::get('/group/{group}/edit', EditGroup::class)->name('group.edit');
 
     Route::middleware(GroupMiddleware::class)->group(function() {
-        Route::get('/group/{group}', Feed::class)->name('group');
+        Route::get('/group/{group}', ShowGroup::class)->name('group');
         Route::get('/group/{group}/feed/{feed}', Suggestions::class)->name('feed');
     });
 
