@@ -19,7 +19,7 @@ final class StoreSuggestion
             ], [
                 'name' => $attributes['game']['name'],
                 'cover' => $attributes['game']['box_art_url'],
-                'is_custom' => $attributes['is_custom'] == true
+                'is_custom' => isset($attributes['game']['is_custom']) && $attributes['game']['is_custom'] == true
             ]);
 
             $suggestion = Suggestion::create([
