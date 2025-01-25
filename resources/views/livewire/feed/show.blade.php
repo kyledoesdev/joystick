@@ -8,9 +8,11 @@
     </x-slot>
 
     <flux:card class="my-4">
-        <div class="flex justify-between">
+        <div class="flex justify-between space-x-2">
             <livewire:suggestions.search />
-            <livewire:suggestions.create :feed="$feed" />
+            <div class="mt-1">
+                <livewire:suggestions.create :feed="$feed" />
+            </div>
         </div>
     </flux:card>
 

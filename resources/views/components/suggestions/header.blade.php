@@ -1,6 +1,6 @@
 @props(['suggestion'])
 
-<div class="flex justify-between">
+<div class="flex justify-between space-x-4">
     <flux:badge>Suggested by: {{ $suggestion->user->name }}</flux:badge>
     <livewire:suggestions.voters-table
         :suggestion="$suggestion"

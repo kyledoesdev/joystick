@@ -9,6 +9,19 @@ class Game extends Model
     protected $fillable = [
         'game_id',
         'name',
-        'cover'
+        'cover',
+        'is_custom'
     ];
+
+    public function casts(): array
+    {
+        return [
+            'is_custom' => 'boolean'
+        ];
+    }
+
+    public static function getBlankCover(): string
+    {
+        return 'https://static-cdn.jtvnw.net/ttv-boxart/66082-285x380.jpg';
+    }
 }

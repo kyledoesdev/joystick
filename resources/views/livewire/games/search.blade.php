@@ -1,5 +1,5 @@
 <div>
-    <form wire:submit="search">
+    <form class="mb-2" wire:submit="search">
         <flux:input.group>
             <flux:input wire:model="phrase" placeholder="Minecraft" required />
 

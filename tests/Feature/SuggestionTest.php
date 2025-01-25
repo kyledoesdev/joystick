@@ -51,7 +51,7 @@ test('clearing a searched game resets the searched game', function() {
         ->assertSet('phrase', '');
 });
 
-test('user create a game suggestion with auto up vote', function () {
+test('user\'s uggestion is created with an auto up vote', function () {
     $gameData = [
         'id' => '123',
         'name' => 'Factorio',
@@ -92,7 +92,7 @@ test('user create a game suggestion with auto up vote', function () {
         ->vote->toBe(Vote::UP_VOTE);
 });
 
-test('suggestion creator can update their suggestion', function() {
+test('suggestion creator can update their suggestion if it is not custom', function() {
     $suggestion = Suggestion::factory()
         ->forFeed($this->feed)
         ->forUser($this->user)
@@ -164,4 +164,21 @@ test('suggestion can not be deleted by someone other than its creator', function
 
     expect(Suggestion::count())->toBe(1);
     expect(Vote::count())->toBe(1);
+});
+
+test('a suggestion with a custom game cannot be updated by anyone', function() {
+    $suggestion = Suggestion::factory()
+        ->forFeed($this->feed)
+        ->forUser($this->user)
+        ->create();
+
+    $suggestion->game()->update(['is_custom' => true]);
+
+    $suggestion = $suggestion->refresh();
+
+    Livewire::actingAs($this->user)
+        ->test(Edit::class, ['suggestion' => $suggestion])
+        ->assertOk()
+        ->call('edit')
+        ->assertForbidden();
 });

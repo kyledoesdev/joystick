@@ -21,6 +21,8 @@ class Edit extends Component
 
     public function edit()
     {
+        abort_if($this->suggestion->game->is_custom == true, 403);
+
         $this->form->gameMode = $this->suggestion->game_mode;
     }
 
