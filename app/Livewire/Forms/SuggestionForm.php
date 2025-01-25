@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Forms;
 
+use App\Actions\Suggestions\DestroySuggestion;
 use App\Actions\Suggestions\StoreSuggestion;
+use App\Models\Game;
 use Flux\Flux;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -12,9 +14,23 @@ class SuggestionForm extends Form
     #[Validate('max:24')]
     public ?string $gameMode = null;
 
+    #[Validate('max:35')]
+    public ?string $customGameName = null;
+
+    public bool $customGame = false;
+    
     public function store($feed, $searchedGame)
     {
         $this->validate();
+
+        if (is_null($searchedGame)) {
+            $searchedGame = [
+                'id' => microtime(true),
+                'name' => $this->customGameName,
+                'box_art_url' => Game::getBlankCover(),
+                'is_custom' => true,
+            ];
+        }
 
         (new StoreSuggestion)->handle(auth()->user(), [
             'feed' => $feed,
@@ -30,7 +46,7 @@ class SuggestionForm extends Form
         $this->validate();
 
         abort_if($suggestion->user_id !== auth()->id(), 403);
-
+        
         $suggestion->update(['game_mode' => $this->gameMode]);
 
         $this->reset();
@@ -43,8 +59,7 @@ class SuggestionForm extends Form
     {
         abort_if($suggestion->user_id !== auth()->id(), 403);
 
-        $suggestion->votes()->forceDelete();
-        $suggestion->forceDelete();
+        (new DestroySuggestion)->handle($suggestion);
 
         Flux::toast(variant: 'success', text: 'Deleted Successfully!', duration: 3000);
     }

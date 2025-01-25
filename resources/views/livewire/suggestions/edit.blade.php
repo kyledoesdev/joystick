@@ -1,7 +1,9 @@
 <div>
-    <flux:modal.trigger name="edit-game-{{ $suggestion->getKey() }}">
-        <flux:button variant="primary" size="sm" icon="pencil-square" wire:click="edit"></flux:button>
-    </flux:modal.trigger>
+    @if ($suggestion->game->is_custom == false)
+        <flux:modal.trigger name="edit-game-{{ $suggestion->getKey() }}">
+            <flux:button variant="primary" size="sm" icon="pencil-square" wire:click="edit"></flux:button>
+        </flux:modal.trigger>
+    @endif
 
     <flux:modal.trigger name="confirm-game-{{ $suggestion->getKey() }}">
         <flux:button variant="danger" size="sm" icon="trash"></flux:button>

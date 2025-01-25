@@ -7,7 +7,11 @@
 @endphp
 
 <div class="flex justify-between mb-4">
-    <div class="mt-2">
+    <div class="mt-2 space-y-1">
+        @if ($suggestion->game->is_custom)
+            <span>{{ $suggestion->game->name }}</span>
+        @endif
+
         <x-game-cover :game="$suggestion->game"></x-game-cover>
     </div>
 
