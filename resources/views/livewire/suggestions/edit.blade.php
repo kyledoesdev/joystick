@@ -1,9 +1,7 @@
 <div>
-    @if ($suggestion->game->is_custom == false)
-        <flux:modal.trigger name="edit-game-{{ $suggestion->getKey() }}">
-            <flux:button variant="primary" size="sm" icon="pencil-square" wire:click="edit"></flux:button>
-        </flux:modal.trigger>
-    @endif
+    <flux:modal.trigger name="edit-game-{{ $suggestion->getKey() }}">
+        <flux:button variant="primary" size="sm" icon="pencil-square" wire:click="edit"></flux:button>
+    </flux:modal.trigger>
 
     <flux:modal.trigger name="confirm-game-{{ $suggestion->getKey() }}">
         <flux:button variant="danger" size="sm" icon="trash"></flux:button>
@@ -15,19 +13,29 @@
         </div>
 
         <div class="my-1 mx-1">
-            <img
-                width="142" 
-                height="190"
-                class="rounded-xl my-2"
-                src="{{ $suggestion->game->cover }}"
-                alt="{{ $suggestion->game->name }}"
-            />
+            @if (! $suggestion->game->is_custom)
+                <img
+                    width="142" 
+                    height="190"
+                    class="rounded-xl my-2"
+                    src="{{ $suggestion->game->cover }}"
+                    alt="{{ $suggestion->game->name }}"
+                />
+            @endif
 
             <flux:separator />
 
-            <div class="mt-4">
+            <div class="mt-4 space-y-2">
+                @if ($suggestion->game->is_custom)
+                    <flux:input
+                        wire:model="form.customGameName"
+                        label="Activity"
+                        description="A video game, tabletop game or any other activity."
+                        required
+                    />
+                @endif
+
                 <flux:input
-                    class="mt-4"
                     wire:model="form.gameMode"
                     label="Game Mode"
                     description="A game type or game mode within the selected game."

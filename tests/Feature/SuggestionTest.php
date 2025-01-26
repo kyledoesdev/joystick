@@ -165,20 +165,3 @@ test('suggestion can not be deleted by someone other than its creator', function
     expect(Suggestion::count())->toBe(1);
     expect(Vote::count())->toBe(1);
 });
-
-test('a suggestion with a custom game cannot be updated by anyone', function() {
-    $suggestion = Suggestion::factory()
-        ->forFeed($this->feed)
-        ->forUser($this->user)
-        ->create();
-
-    $suggestion->game()->update(['is_custom' => true]);
-
-    $suggestion = $suggestion->refresh();
-
-    Livewire::actingAs($this->user)
-        ->test(Edit::class, ['suggestion' => $suggestion])
-        ->assertOk()
-        ->call('edit')
-        ->assertForbidden();
-});
