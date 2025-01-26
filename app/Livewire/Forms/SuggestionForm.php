@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Forms;
 
+use App\Actions\Suggestions\UpdateSuggestion;
 use App\Actions\Suggestions\DestroySuggestion;
 use App\Actions\Suggestions\StoreSuggestion;
 use App\Models\Game;
 use Flux\Flux;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -25,7 +27,7 @@ class SuggestionForm extends Form
 
         if (is_null($searchedGame)) {
             $searchedGame = [
-                'id' => microtime(true),
+                'id' => Str::uuid(),
                 'name' => $this->customGameName,
                 'box_art_url' => Game::getBlankCover(),
                 'is_custom' => true,
@@ -46,9 +48,12 @@ class SuggestionForm extends Form
         $this->validate();
 
         abort_if($suggestion->user_id !== auth()->id(), 403);
-        
-        $suggestion->update(['game_mode' => $this->gameMode]);
 
+        (new UpdateSuggestion)->handle($suggestion, [
+            'game_name' => $this->customGameName,
+            'game_mode' => $this->gameMode
+        ]);
+        
         $this->reset();
 
         Flux::modal("edit-game-{$suggestion->getKey()}")->close();
