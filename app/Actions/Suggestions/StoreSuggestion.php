@@ -36,7 +36,9 @@ final class StoreSuggestion
                 'vote' => Vote::UP_VOTE
             ]);
 
-            (new DiscordPing)->handle($suggestion->feed->group, "{$user->name} added the game suggession: {$game->name} to the feed: {$suggestion->feed->name}.");
+            if ($suggestion->feed->group->discord_updates && $suggestion->feed->group->settings->d_create_suggestion_alerts) {
+                (new DiscordPing)->handle($suggestion->feed->group, "{$user->name} added the game suggession: {$game->name} to the feed: {$suggestion->feed->name}.");
+            }
         });
     }
 }

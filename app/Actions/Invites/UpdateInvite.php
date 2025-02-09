@@ -26,11 +26,7 @@ final class UpdateInvite
                 'user_id' => $invite->user_id
             ]);
 
-            (new DiscordPing)->handle(
-                $invite->group,
-                $invite->user->name . ' has '. $this->getActionString($attributes['status']) . ' the group.',
-                in_array($attributes['status'], [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT]) ? 'error' : 'info'
-            );
+            $this->handleDiscord($invite, $attributes);
         });
 
         /* delete feeds, suggestions & votes for the user if they were removed or left the group */
@@ -66,5 +62,19 @@ final class UpdateInvite
         }
 
         return $string;
+    }
+
+    private function handleDiscord(Invite $invite, array $attributes): void
+    {
+        if (
+            ($invite->group->discord_updates && $invite->group->settings->d_user_left_alerts && in_array($attributes['status'], [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT])) ||
+            ($invite->group->discord_updates && $invite->group->settings->d_user_joined_alerts && $attributes['status'] == InviteStatus::ACCEPTED)
+        ) {
+            (new DiscordPing)->handle(
+                $invite->group,
+                $invite->user->name . ' has '. $this->getActionString($attributes['status']) . ' the group.',
+                in_array($attributes['status'], [InviteStatus::OWNER_REMOVED, InviteStatus::USER_LEFT]) ? 'error' : 'info'
+            );
+        }
     }
 }

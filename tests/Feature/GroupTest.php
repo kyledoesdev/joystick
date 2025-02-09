@@ -4,6 +4,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\Group\EditGroup;
 use App\Models\Feed;
 use App\Models\Group;
+use App\Models\GroupSetting;
 use App\Models\Invite;
 use App\Models\InviteStatus;
 use App\Models\User;
@@ -51,6 +52,7 @@ test('user can create a new group', function() {
     expect(Group::count())->toBe(1);
     expect(Feed::count())->toBe(1);
     expect(Invite::count())->toBe(1);
+    expect(GroupSetting::count())->toBe(1);
 
     expect(Group::first())->name->toBe('Foo');
     expect(Feed::first())
@@ -60,6 +62,9 @@ test('user can create a new group', function() {
         ->group_id->toBe(Group::first()->getKey())
         ->user_id->toBe($this->user->getKey())
         ->status_id->toBe(InviteStatus::ACCEPTED);
+    expect(GroupSetting::first())
+        ->d_create_feed_alerts->toBeTrue()
+        ->d_create_suggestion_alerts->toBeTrue();
 });
 
 test('user can edit group they own', function() {

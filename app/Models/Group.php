@@ -22,6 +22,11 @@ class Group extends Model
         'owner_feeds_only'
     ];
 
+    /* danger - handle with care */
+    protected $with = [
+        'settings',
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -68,5 +73,10 @@ class Group extends Model
     public function suggestions(): HasManyThrough
     {
         return $this->hasManyThrough(Suggestion::class, Feed::class);
+    }
+
+    public function settings(): HasOne
+    {
+        return $this->hasOne(GroupSetting::class);
     }
 }

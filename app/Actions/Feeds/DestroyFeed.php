@@ -14,7 +14,9 @@ final class DestroyFeed
         DB::transaction(function() use ($user, $feed) {
             $feed->delete();
 
-            (new DiscordPing)->handle($feed->group, "{$user->name} deleted feed: {$feed->name}.", 'error');
+            if ($feed->group->discord_updates && $feed->group->settings->d_destroy_feed_alerts) {
+                (new DiscordPing)->handle($feed->group, "{$user->name} deleted feed: {$feed->name}.", 'error');
+            }
         });
     }
 }

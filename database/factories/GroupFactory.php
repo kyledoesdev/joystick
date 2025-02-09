@@ -53,6 +53,8 @@ class GroupFactory extends Factory
                 'name' => Str::possessive($group->name) . ' Backlog',
                 'start_time' => now(),
             ]);
+
+            $group->settings()->create();
         });
     }
 }
