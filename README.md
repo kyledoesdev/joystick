@@ -10,7 +10,7 @@ It also includes discord webhook intergration to send alerts to the discord serv
 
 ## Current Features 🚀
 - Groups
-    - Discord Webhook integration per group
+    - Discord Webhook integration per group w/ toggleable settings for determining when an action is performed, if discord pings should be sent.
     - Invite System with email & in app notifications for group invitations for both the invitee & group owner
     - A group "backlog" is automatically created
 - Feeds
@@ -27,10 +27,10 @@ It also includes discord webhook intergration to send alerts to the discord serv
 ## Upcoming Features 👨‍💻
 - Copy a Suggestion from one feed to another feed. (Copy from backlog to a specific game night feed)
 - Group Moderators or admins that have elevated permissions when handling group submissions
-- Fine tuned settings to dictate when discord webhook messages are sent
 - Group member list on feeds page.
 - Reminder ping to remind a user to vote on a feed's game night suggestions.
 - User prefs & notification disabling for emails.
+- In app notification system for alerting when a discord ping fails, a game night is approaching & more.
 
 Stay tuned to the [project board](https://github.com/users/kyledoesdev/projects/1/views/1) for what features, bugs & issues are being worked on.
 

@@ -43,13 +43,29 @@
                 />
 
                 @if ($this->groupForm->discordUpdates)
-                    <flux:input
-                        type="password"
-                        label="Webhook URL"
-                        description="Send feed & suggestion updates to a discord channel of your choice."
-                        wire:model="groupForm.discordWebHook"
-                        viewable
-                    />
+                    <div class="flex flex-col space-y-8 mt-4">
+                        <flux:input
+                            type="password"
+                            label="Webhook URL"
+                            description="Send feed & suggestion updates to a discord channel of your choice."
+                            wire:model="groupForm.discordWebHook"
+                            viewable
+                        />
+
+                        <flux:checkbox.group wire:model.live="groupForm.discordUpdateTypes" label="Discord Notifications" description="Select which action(s) should trigger a discord update">
+                            <div class="flex gap-4 *:gap-x-2">
+                                <flux:checkbox.all label="Select All" />
+
+                                @foreach (App\Models\GroupSetting::getDiscordPingSettings() as $key => $label)
+                                    @if ($this->groupForm->group->settings->{$key})
+                                        <flux:checkbox checked value="{{ $key }}" label="{{ $label }}" />
+                                    @else
+                                        <flux:checkbox value="{{ $key }}" label="{{ $label }}" />
+                                    @endif
+                                @endforeach
+                            </div>
+                        </flux:checkbox.group>
+                    </div>
                 @endif
             </div>
         </flux:card>

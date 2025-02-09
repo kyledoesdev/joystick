@@ -33,7 +33,9 @@ class Feed extends Model
                 ? 'which has a start time of: ' . $model->start_time 
                 : '.';
 
-            (new DiscordPing)->handle($model->group, "{$user} created feed: {$model->name} {$startTime}");
+            if ($model->group->discord_updates && $model->group->settings->d_create_feed_alerts) {
+                (new DiscordPing)->handle($model->group, "{$user} created feed: {$model->name} {$startTime}");
+            }
         });
     }
 

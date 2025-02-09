@@ -41,7 +41,12 @@ final class StoreGroup
                 'user_id' => $user->getKey()
             ]);
 
-            (new DiscordPing)->handle($group, 'Webhook connected successfully!');
+            /* create settings for group */
+            $group->settings()->create();
+
+            if (isset($attributes['discord_webhook_url']) && isset($attributes['discord_updates'])) {
+                (new DiscordPing)->handle($group, 'Webhook connected successfully!');
+            }
         });
     }
 }

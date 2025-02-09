@@ -3,7 +3,9 @@
 namespace App\Livewire\Forms;
 
 use App\Actions\Groups\StoreGroup;
+use App\Actions\Groups\UpdateGroup;
 use App\Models\Group;
+use App\Models\GroupSetting;
 use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
@@ -23,6 +25,8 @@ class GroupForm extends Form
 
     #[Validate('nullable|boolean')]
     public $discordUpdates = false;
+
+    public array $discordUpdateTypes = [];
 
     public ?Group $group = null;
 
@@ -50,19 +54,26 @@ class GroupForm extends Form
         $this->ownerFeedsOnly = $this->group->owner_feeds_only;
         $this->discordWebHook = $this->group->discord_webhook_url;
         $this->discordUpdates = $this->group->discord_updates;
+
+        foreach (GroupSetting::getDiscordPingSettings() as $key => $label) {
+            if ($this->group->settings->{$key}) {
+                $this->discordUpdateTypes[] = $key;
+            }
+        }
     }
 
     public function update($group)
     {
         $this->validate();
 
-        $this->group->update([
+        (new UpdateGroup)->handle($group, [
             'name' => $this->name,
             'owner_feeds_only' => $this->ownerFeedsOnly,
             'discord_webhook_url' => $this->discordWebHook,
             'discord_updates' => $this->discordUpdates,
+            'group_discord_alert_settongs' => $this->discordUpdateTypes
         ]);
-        
+
         Flux::toast(variant: 'success', text: 'Group Updated!', duration: 3000);
     }
 
