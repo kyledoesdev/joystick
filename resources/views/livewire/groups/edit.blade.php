@@ -85,32 +85,32 @@
             <flux:table :paginate="count($members) ? $members : false">
                 @forelse ($members as $member)
                     @if ($loop->first)
-                        <flux:columns>
-                            <flux:column sortable :sorted="$this->sortBy === 'name'" :direction="$this->sortDirection" wire:click="sort('name')">Name</flux:column>
-                            <flux:column sortable :sorted="$this->sortBy === 'status_name'" :direction="$this->sortDirection" wire:click="sort('status_name')">Status</flux:column>
-                            <flux:column></flux:column>
-                        </flux:columns>
+                        <flux:table.columns>
+                            <flux:table.column sortable :sorted="$this->sortBy === 'name'" :direction="$this->sortDirection" wire:click="sort('name')">Name</flux:table.column>
+                            <flux:table.column sortable :sorted="$this->sortBy === 'status_name'" :direction="$this->sortDirection" wire:click="sort('status_name')">Status</flux:table.column>
+                            <flux:table.column></flux:table.column>
+                        </flux:table.columns>
                     @endif
 
-                    <flux:rows>
-                        <flux:row :key="$member->id">
-                            <flux:cell class="flex items-center gap-3">
+                    <flux:table.rows>
+                        <flux:table.row :key="$member->id">
+                            <flux:table.cell class="flex items-center gap-3">
                                 <flux:avatar src="{{ $member->avatar }}" />
 
                                 {{ $member->name }}
-                            </flux:cell>
+                            </flux:table.cell>
 
-                            <flux:cell>
+                            <flux:table.cell>
                                 <flux:badge variant="solid" :color="$member->status_color">{{ $member->status_name ?? 'Not Invited' }}</flux:badge>
-                            </flux:cell>
+                            </flux:table.cell>
 
-                            <flux:cell>
+                            <flux:table.cell>
                                 @if ($member->getKey() != auth()->id())
                                     <flux:button icon="trash" variant="danger" size="sm" wire:click="removeMember({{ $member->getKey() }})" />
                                 @endif
-                            </flux:cell>
-                        </flux:row>
-                    </flux:rows>
+                            </flux:table.cell>
+                        </flux:table.row>
+                    </flux:table.rows>
                 @empty
                     <x-empty-collection :search="$search" message="No users found for term: {{ $search }}" />
                 @endforelse
