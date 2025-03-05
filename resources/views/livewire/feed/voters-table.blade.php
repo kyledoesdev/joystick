@@ -12,22 +12,22 @@
         </div>
 
         <flux:table class="my-4" :paginate="count($this->votes) ? $this->votes : false">
-            <flux:columns>
-                <flux:column></flux:column>
-                <flux:column>User</flux:column>
-                <flux:column>Vote</flux:column>
-            </flux:columns>
+            <flux:table.columns>
+                <flux:table.column></flux:table.column>
+                <flux:table.column>User</flux:table.column>
+                <flux:table.column>Vote</flux:table.column>
+            </flux:table.columns>
 
-            <flux:rows>
+            <flux:table.rows>
                 @foreach ($this->votes as $vote)
-                    <flux:row>
-                        <flux:cell>
+                    <flux:table.row>
+                        <flux:table.cell>
                             <flux:avatar src="{{ $vote->user->avatar }}" />
-                        </flux:cell>
-                        <flux:cell>
+                        </flux:table.cell>
+                        <flux:table.cell>
                             {{ $vote->user->name }}
-                        </flux:cell>
-                        <flux:cell>
+                        </flux:table.cell>
+                        <flux:table.cell>
                             @if ($vote->vote == App\Models\Vote::UP_VOTE)
                                 <flux:badge color="lime">
                                     <flux:icon.arrow-up-circle />
@@ -41,10 +41,10 @@
                                     <flux:icon.arrow-down-circle />
                                 </flux:badge>
                             @endif
-                        </flux:cell>
-                    </flux:row>
+                        </flux:table.cell>
+                    </flux:table.row>
                 @endforeach
-            </flux:rows>
+            </flux:table.rows>
         </flux:table>
     </flux:modal>
 </div>
