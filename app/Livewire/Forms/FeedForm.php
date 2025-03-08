@@ -78,6 +78,8 @@ class FeedForm extends Form
 
     public function destroy()
     {
+        $this->feed = $this->feed->load('suggestions', 'suggestions.game');
+
         (new DestroyFeed)->handle(auth()->user(), $this->feed);
 
         Flux::modal('destroy-feed')->close();
