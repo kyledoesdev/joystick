@@ -63,11 +63,16 @@
         </flux:card>
 
         {{-- Members Card & Admin Actions --}}
-        <flux:card>
-            member list and cool stats coming soon
-            @if ($group->owner_id == auth()->id())
-                <flux:card>
-                    <div class="flex justify-end">
+        <flux:card class="space-y-4">
+            <flux:card>
+                <div class="flex justify-between">
+                    <div>
+                        <flux:heading size="lg" class="mt-1">
+                            Group Members
+                        </flux:heading>
+                    </div>
+
+                    @if ($group->owner_id == auth()->id())
                         <flux:button 
                             href="{{ route('group.edit', $group) }}"
                             size="sm"
@@ -76,9 +81,42 @@
                         >
                             Edit Group
                         </flux:button>
-                    </div>
-                </flux:card>
-            @endif
+                    @endif
+                </div>
+            </flux:card>
+
+            <flux:card>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    @php
+                        $highestVoteCount = $this->members->max('vote_count');
+                    @endphp
+
+                    @foreach ($this->members as $member)
+                        <flux:card>
+                            <div class="flex">
+                                <div class="shrink-0 size-8">
+                                    <img src="{{ $member->avatar }}" />
+                                </div>
+                                <div class="mt-1 ml-4">
+                                    <span class="mr-1">{{ $member->user_name }} </span>
+                                    <flux:badge
+                                        inset="top bottom"
+                                        size="sm"
+                                        color="{{ $member->vote_count == $highestVoteCount && $highestVoteCount > 0 ? 'amber' : 'zinc' }}"
+                                        icon="{{ $member->vote_count == $highestVoteCount && $highestVoteCount > 0 ? 'trophy' : '' }}"
+                                    >
+                                        {{ $member->vote_count }}
+                                    </flux:badge>
+                                </div>
+                            </div>
+                        </flux:card>
+                    @endforeach
+                </div>
+
+                <div class="mt-2">
+                    <flux:pagination :paginator="$this->members" />
+                </div>
+            </flux:card>
         </flux:card>
     </div>
 

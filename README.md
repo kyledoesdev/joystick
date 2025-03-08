@@ -8,7 +8,7 @@ vote on the other suggestions.
 
 It also includes discord webhook intergration to send alerts to the discord server that is used for voice chat for game night.
 
-## Current Features 🚀
+## Features 🚀
 - Groups
     - Discord Webhook integration per group w/ toggleable settings for determining when an action is performed, if discord pings should be sent.
     - Invite System with email & in app notifications for group invitations for both the invitee & group owner
@@ -24,16 +24,4 @@ It also includes discord webhook intergration to send alerts to the discord serv
     - Users can Up Vote, Down Vote or neutral vote on every game suggestion.
     - Users can view a table of all of the votes for a suggestion via a table and hover tooltip
 
-## Upcoming Features 👨‍💻
-- Copy a Suggestion from one feed to another feed. (Copy from backlog to a specific game night feed)
-- Group Moderators or admins that have elevated permissions when handling group submissions
-- Group member list on feeds page.
-- Reminder ping to remind a user to vote on a feed's game night suggestions.
-- User prefs & notification disabling for emails.
-- In app notification system for alerting when a discord ping fails, a game night is approaching & more.
-
 Stay tuned to the [project board](https://github.com/users/kyledoesdev/projects/1/views/1) for what features, bugs & issues are being worked on.
-
-### TODO
-
-Contributing Guide & Installation Guide
