@@ -6,6 +6,7 @@ use App\Livewire\Forms\FeedForm;
 use App\Models\Feed;
 use App\Models\Group;
 use App\Models\InviteStatus;
+use App\Models\Vote;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -50,6 +51,16 @@ class ShowGroup extends Component
             ->orderBy('vote_count', 'desc')
             ->orderBy('users.name', 'asc')
             ->paginate(6);
+    }
+
+    public function getHighestVoteCountProperty()
+    {
+        return Vote::query()
+            ->selectRaw('count(*) as top_vote_count')
+            ->where('group_id', $this->group->getKey())
+            ->groupBy('user_id')
+            ->orderBy('top_vote_count', 'desc')
+            ->value('top_vote_count') ?? 0;
     }
 
     public function store()

@@ -87,10 +87,6 @@
 
             <flux:card>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    @php
-                        $highestVoteCount = $this->members->max('vote_count');
-                    @endphp
-
                     @foreach ($this->members as $member)
                         <flux:card>
                             <div class="flex">
@@ -102,8 +98,8 @@
                                     <flux:badge
                                         inset="top bottom"
                                         size="sm"
-                                        color="{{ $member->vote_count == $highestVoteCount && $highestVoteCount > 0 ? 'amber' : 'zinc' }}"
-                                        icon="{{ $member->vote_count == $highestVoteCount && $highestVoteCount > 0 ? 'trophy' : '' }}"
+                                        color="{{ $member->vote_count == $this->highestVoteCount && $this->highestVoteCount > 0 ? 'amber' : 'zinc' }}"
+                                        icon="{{ $member->vote_count == $this->highestVoteCount && $this->highestVoteCount > 0 ? 'trophy' : '' }}"
                                     >
                                         {{ $member->vote_count }}
                                     </flux:badge>
