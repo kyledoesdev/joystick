@@ -28,6 +28,7 @@ class User extends Authenticatable
         'user_platform',
         'external_token',
         'external_refresh_token',
+        'is_dev'
     ];
 
     protected $hidden = [
