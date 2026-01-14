@@ -1,3 +1,5 @@
+### My friends & I have stopped using this application so I have archived this repo.
+
 [![Tests](https://github.com/kyledoesdev/joystick/actions/workflows/tests.yml/badge.svg)](https://github.com/kyledoesdev/joystick/actions/workflows/tests.yml)
 
 # Joystick Jury 🕹️
